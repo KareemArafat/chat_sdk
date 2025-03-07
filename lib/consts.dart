@@ -1,0 +1,10 @@
+import 'package:flutter/material.dart';
+
+const baseColor1 = Color.fromARGB(255, 96, 2, 191);
+const baseColor2 = Color(0xFFA44AFF);
+const baseAppBarColor = Color(0xFF17193E);
+const baseGroundColor = Color(0xFF080B2C);
+
+const baseUrl = 'http://192.168.89.254:6969';
+
+const contactsList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "G"];
