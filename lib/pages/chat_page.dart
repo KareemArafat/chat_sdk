@@ -7,6 +7,7 @@ import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/socket.dart';
 import 'package:chat_sdk/ui/chat_bubble.dart';
 import 'package:chat_sdk/ui/image_bubble.dart';
+import 'package:chat_sdk/ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/video_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,7 +88,11 @@ class _ChatPageState extends State<ChatPage> {
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'video') {
                         return VideoBubble(o: messageList[index]);
-                      } else {
+                      } else if (messageList[index].senderId == widget.id &&
+                          messageList[index].file!.type == 'file') {
+                        return SoundBubble(o: messageList[index]);
+                      }
+                      else {
                         return null;
                       }
                     },
@@ -98,9 +103,10 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(4),
               child: ChatBottomField(
-                soundFn: ()  {
-                  //  Navigator.pop(context);
-                  // BlocProvider.of<ChatCubit>(context).sendAudio();
+                soundFn: () {
+                  Navigator.pop(context);
+                  BlocProvider.of<ChatCubit>(context)
+                      .sendSound(socket: socketService.socket);
                 },
                 videoFn: () {
                   Navigator.pop(context);

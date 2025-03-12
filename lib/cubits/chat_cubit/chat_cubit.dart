@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -62,7 +63,7 @@ class ChatCubit extends Cubit<ChatState> {
         'name': 'imageName.mp4',
         'type': 'video',
         'base64': videoBytes,
-        'data': returnedVideo
+        'data': videoFile
       }),
     );
     socket.emit('uploadFiles', m.toJson());
@@ -70,25 +71,25 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  // Future<String?> sendAudio() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //     type: FileType.audio,
-  //   );
-  //   String id = await ShardpModel().getSenderId();
-
-  //   if (result != null) {
-  //     final m = MessageModel(
-  //       senderId: id,
-  //       roomId: '674a0b28628dfde5ad21f103',
-  //       file: MediaFile.fromJson({
-  //         'name': 'imageName.mp4',
-  //         'type': 'video',
-  //         'base64': result.files.single.path,
-  //       }),
-  //     );
-  //     cubitMessageList.add(m);
-  //     emit(ChatSuccess(messagesList: cubitMessageList));
-  //   }
-  //   return null;
-  // }
+  sendSound({required Socket socket}) async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result == null) return;
+    File file = File(result.files.single.path!);
+    List<int> audioBytes = await file.readAsBytes();
+    String id = await ShardpModel().getSenderId();
+    final m = MessageModel(
+      senderId: id,
+      roomId: '674a0b28628dfde5ad21f103',
+      file: MediaFile.fromJson({
+        'name': 'sound.mp3',
+        'type': 'file',
+        'base64': audioBytes,
+        'sound': result.files.single.path,
+      }),
+    );
+  //  socket.emit('uploadFiles', m.toJson());
+    cubitMessageList.add(m);
+    emit(ChatSuccess(messagesList: cubitMessageList));
+  }
 }

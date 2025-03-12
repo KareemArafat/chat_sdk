@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:image_picker/image_picker.dart';
 
 class MessageModel {
@@ -37,9 +39,10 @@ class MediaFile {
   String name;
   String type;
   var base64;
-  XFile? data;
+  File? data;
+  String? sound;
 
-  MediaFile(this.path, this.name, this.type, this.base64, this.data);
+  MediaFile(this.path, this.name, this.type, this.base64, this.data,this.sound);
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(
@@ -48,6 +51,7 @@ class MediaFile {
       jsonData['type'],
       jsonData['base64'],
       jsonData['data'],
+      jsonData['sound'],
     );
   }
 
