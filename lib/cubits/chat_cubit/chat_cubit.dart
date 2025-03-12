@@ -63,7 +63,7 @@ class ChatCubit extends Cubit<ChatState> {
         'name': 'imageName.mp4',
         'type': 'video',
         'base64': videoBytes,
-        'data': videoFile
+        'videoData': videoFile
       }),
     );
     socket.emit('uploadFiles', m.toJson());
@@ -85,10 +85,10 @@ class ChatCubit extends Cubit<ChatState> {
         'name': 'sound.mp3',
         'type': 'file',
         'base64': audioBytes,
-        'sound': result.files.single.path,
+        'soundData': result,
       }),
     );
-  //  socket.emit('uploadFiles', m.toJson());
+    socket.emit('uploadFiles', m.toJson());
     cubitMessageList.add(m);
     emit(ChatSuccess(messagesList: cubitMessageList));
   }

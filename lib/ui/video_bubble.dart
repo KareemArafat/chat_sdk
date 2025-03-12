@@ -23,10 +23,11 @@ class _VideoBubbleState extends State<VideoBubble> {
   }
 
   void loadVideo() async {
-    controller = VideoPlayerController.file(File(widget.o.file!.data!.path))
-      ..initialize().then((_) {
-        setState(() {});
-      });
+    controller =
+        VideoPlayerController.file(File(widget.o.file!.videoData!.path))
+          ..initialize().then((_) {
+            setState(() {});
+          });
     controller!.addListener(() {
       setState(() {
         isPlaying = controller!.value.isPlaying;

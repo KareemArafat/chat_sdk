@@ -127,8 +127,8 @@ class AudioPlayerState extends State<SoundBubble> {
   }
 
   Future<void> play() async {
-    await audioPlayer
-        .setSource(ap.DeviceFileSource(widget.o.file!.sound!)); // Preload file
+    await audioPlayer.setSource(ap.DeviceFileSource(
+        widget.o.file!.soundData!.files.single.path!)); // Preload file
     await audioPlayer.resume(); // Start playing
   }
 

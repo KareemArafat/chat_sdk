@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class MessageModel {
   String senderId;
@@ -35,30 +34,32 @@ class MessageModel {
 }
 
 class MediaFile {
+  // ignore: prefer_typing_uninitialized_variables
+  var base64;
   String? path;
   String name;
   String type;
-  var base64;
-  File? data;
-  String? sound;
+  File? videoData;
+  FilePickerResult? soundData;
 
-  MediaFile(this.path, this.name, this.type, this.base64, this.data,this.sound);
+  MediaFile(this.base64, this.path, this.name, this.type, this.videoData,
+      this.soundData);
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(
+      jsonData['base64'],
       jsonData['path'],
       jsonData['name'],
       jsonData['type'],
-      jsonData['base64'],
-      jsonData['data'],
-      jsonData['sound'],
+      jsonData['videoData'],
+      jsonData['soundData'],
     );
   }
 
   Map<String, dynamic> toJson() => {
+        'base64': base64,
         'path': path,
         'name': name,
         'type': type,
-        'base64': base64,
       };
 }
