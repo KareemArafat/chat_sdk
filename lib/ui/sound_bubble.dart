@@ -57,13 +57,17 @@ class AudioPlayerState extends State<SoundBubble> {
             color: baseColor1,
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.only(left: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           height: 50,
-          width: 200,
+          width: 220,
           child: Row(
             children: <Widget>[
               playIcon(),
               sliderLine(),
+              const Icon(
+                Icons.music_note_rounded,
+                color: Colors.white,
+              ),
             ],
           ),
         ),
@@ -72,30 +76,20 @@ class AudioPlayerState extends State<SoundBubble> {
   }
 
   Widget playIcon() {
-    Icon icon;
-    Color color;
-
-    if (audioPlayer.state == ap.PlayerState.playing) {
-      icon = const Icon(Icons.pause, color: Colors.grey, size: 30);
-      color = Colors.grey.withOpacity(0.1);
-    } else {
-      icon = const Icon(Icons.play_arrow, color: Colors.white, size: 30);
-      color = Colors.white.withOpacity(0.1);
-    }
-
-    return ClipOval(
-      child: Material(
-        color: color,
-        child: InkWell(
-          child: SizedBox(width: 30, height: 30, child: icon),
-          onTap: () {
-            if (audioPlayer.state == ap.PlayerState.playing) {
-              pause();
-            } else {
-              play();
-            }
-          },
-        ),
+    return GestureDetector(
+      onTap: () {
+        if (audioPlayer.state == ap.PlayerState.playing) {
+          pause();
+        } else {
+          play();
+        }
+      },
+      child: Icon(
+        audioPlayer.state == ap.PlayerState.playing
+            ? Icons.pause
+            : Icons.play_arrow,
+        color: Colors.white,
+        size: 30,
       ),
     );
   }

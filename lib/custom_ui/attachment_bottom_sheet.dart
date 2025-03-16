@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 attachmentSheet(
   BuildContext context, {
   void Function()? cameraFn,
+  void Function()? videoRecordFn,
   void Function()? imageFn,
   void Function()? videoFn,
   void Function()? filesFn,
@@ -29,16 +30,16 @@ attachmentSheet(
                   text: 'Camera',
                 ),
                 AttachmentsIcons(
-                  pressed: imageFn,
-                  color: Colors.black12,
-                  iconData: Icons.image,
-                  text: 'Image',
-                ),
-                AttachmentsIcons(
-                  pressed: videoFn,
+                  pressed: videoRecordFn,
                   color: Colors.black12,
                   iconData: Icons.videocam,
                   text: 'Video',
+                ),
+                AttachmentsIcons(
+                  pressed: soundFn,
+                  color: Colors.black12,
+                  iconData: Icons.music_note,
+                  text: 'Music',
                 ),
               ],
             ),
@@ -46,21 +47,22 @@ attachmentSheet(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AttachmentsIcons(
-                  pressed: soundFn,
+                  pressed: imageFn,
                   color: Colors.black12,
-                  iconData: Icons.music_note,
-                  text: 'Music',
+                  iconData: Icons.image,
+                  text: 'Images',
+                ),
+                AttachmentsIcons(
+                  pressed: videoFn,
+                  color: Colors.black12,
+                  iconData: Icons.video_collection,
+                  text: 'Videos',
                 ),
                 AttachmentsIcons(
                   pressed: filesFn,
                   color: Colors.black12,
                   iconData: Icons.file_open,
-                  text: 'File',
-                ),
-                const AttachmentsIcons(
-                  color: Colors.black12,
-                  iconData: Icons.contacts,
-                  text: 'Contact',
+                  text: 'Files',
                 ),
               ],
             ),

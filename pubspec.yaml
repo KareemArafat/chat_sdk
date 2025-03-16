@@ -24,6 +24,7 @@ dependencies:
   permission_handler: ^11.4.0
 
   cupertino_icons: ^1.0.8
+  open_filex: ^4.7.0
   
 
 

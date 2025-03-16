@@ -1,6 +1,9 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/custom_ui/attachment_bottom_sheet.dart';
+import 'package:chat_sdk/custom_ui/recording_process.dart';
+import 'package:chat_sdk/services/recoding.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatBottomField extends StatelessWidget {
   const ChatBottomField(
@@ -14,7 +17,10 @@ class ChatBottomField extends StatelessWidget {
       this.cameraFn,
       this.imageFn,
       this.videoFn,
-      this.fileFn});
+      this.fileFn,
+      this.videoRecordFn,
+      required this.recordObj,
+      required this.socketObj});
   final Function(String)? changed;
   final Function(String)? submitted;
   final TextEditingController? controller;
@@ -25,6 +31,10 @@ class ChatBottomField extends StatelessWidget {
   final void Function()? imageFn;
   final void Function()? videoFn;
   final void Function()? fileFn;
+  final void Function()? videoRecordFn;
+  final RecordService recordObj;
+  final Socket socketObj;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,17 +96,9 @@ class ChatBottomField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.fromBorderSide(
-                  BorderSide(color: baseColor1, width: 2)),
-            ),
-            child: IconButton(
-              onPressed: voiceFn,
-              icon: const Icon(Icons.mic, color: baseColor1),
-            ),
+          VoiceRecorderScreen(
+            recordObj: recordObj,
+            socketObj: socketObj,
           ),
         ],
       ),

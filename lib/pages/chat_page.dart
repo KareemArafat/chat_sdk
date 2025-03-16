@@ -4,11 +4,13 @@ import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/custom_ui/chat_app_bar.dart';
 import 'package:chat_sdk/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/services/recoding.dart';
 import 'package:chat_sdk/services/socket.dart';
 import 'package:chat_sdk/ui/chat_bubble.dart';
+import 'package:chat_sdk/ui/file_bubble.dart';
 import 'package:chat_sdk/ui/image_bubble.dart';
-import 'package:chat_sdk/ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/video_bubble.dart';
+import 'package:chat_sdk/ui/voice_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +27,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final SocketService socketService = SocketService();
+  late RecordService recordService = RecordService();
   final TextEditingController textController = TextEditingController();
   VideoPlayerController? videoController;
   final ScrollController scrollController = ScrollController();
@@ -90,9 +93,8 @@ class _ChatPageState extends State<ChatPage> {
                         return VideoBubble(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'file') {
-                        return SoundBubble(o: messageList[index]);
-                      }
-                      else {
+                        return FileBubble(o: messageList[index]);
+                      } else {
                         return null;
                       }
                     },
@@ -103,10 +105,22 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(4),
               child: ChatBottomField(
+                recordObj: recordService,
+                socketObj: socketService.socket,
                 soundFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context)
                       .sendSound(socket: socketService.socket);
+                },
+                fileFn: () {
+                   Navigator.pop(context);
+                  BlocProvider.of<ChatCubit>(context)
+                      .sendFile(socket: socketService.socket);
+                },
+                videoRecordFn: () {
+                  Navigator.pop(context);
+                  BlocProvider.of<ChatCubit>(context).sendVideo(
+                      source: ImageSource.camera, socket: socketService.socket);
                 },
                 videoFn: () {
                   Navigator.pop(context);

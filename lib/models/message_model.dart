@@ -41,9 +41,10 @@ class MediaFile {
   String type;
   File? videoData;
   FilePickerResult? soundData;
+  String recordData;
 
   MediaFile(this.base64, this.path, this.name, this.type, this.videoData,
-      this.soundData);
+      this.soundData, this.recordData);
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(
@@ -53,6 +54,7 @@ class MediaFile {
       jsonData['type'],
       jsonData['videoData'],
       jsonData['soundData'],
+      jsonData['recordData'],
     );
   }
 
