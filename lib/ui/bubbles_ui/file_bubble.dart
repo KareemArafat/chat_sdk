@@ -11,7 +11,7 @@ class FileBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        OpenFilex.open(o.file!.recordData);
+        OpenFilex.open(o.file!.recordData!);
       },
       child: Align(
         alignment: Alignment.centerLeft,

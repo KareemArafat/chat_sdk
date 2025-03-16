@@ -4,16 +4,16 @@ import 'package:chat_sdk/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 
-class VoiceBubble extends StatefulWidget {
+class RecordBubble extends StatefulWidget {
   final MessageModel o;
 
-  const VoiceBubble({super.key, required this.o});
+  const RecordBubble({super.key, required this.o});
 
   @override
   AudioPlayerState createState() => AudioPlayerState();
 }
 
-class AudioPlayerState extends State<VoiceBubble> {
+class AudioPlayerState extends State<RecordBubble> {
   final audioPlayer = ap.AudioPlayer();
   late StreamSubscription<void> _playerStateChangedSubscription;
   late StreamSubscription<Duration?> _durationChangedSubscription;
@@ -123,7 +123,7 @@ class AudioPlayerState extends State<VoiceBubble> {
 
   Future<void> play() async {
     await audioPlayer.setSource(
-        ap.DeviceFileSource(widget.o.file!.recordData)); // Preload file
+        ap.DeviceFileSource(widget.o.file!.recordData!)); // Preload file
     await audioPlayer.resume(); // Start playing
   }
 

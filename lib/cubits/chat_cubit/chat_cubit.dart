@@ -10,55 +10,54 @@ import 'package:socket_io_client/socket_io_client.dart';
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
   List<MessageModel> cubitMessageList = [];
+  String roomId = '674a0b28628dfde5ad21f103';
 
   sendMess({required Socket socket, required String mess}) async {
-      String id = await ShardpModel().getSenderId();
-      final m = MessageModel(
-          senderId: id, roomId: '674a0b28628dfde5ad21f103', text: mess);
-      cubitMessageList.add(m);
-      socket.emit('sendMessage',
-          {'senderId': id, 'roomId': '674a0b28628dfde5ad21f103', 'text': mess});
-      emit(ChatSuccess(messagesList: List.from(cubitMessageList)));
+    String id = await ShardpModel().getSenderId();
+    final message = MessageModel(senderId: id, roomId: roomId, text: mess);
+    cubitMessageList.add(message);
+    socket.emit('sendMessage', message.toJson());
+    emit(ChatSuccess(messagesList: List.from(cubitMessageList)));
   }
 
-  sendImage({required ImageSource source, required Socket socket}) async {
+  sendImage({required Socket socket, required ImageSource source}) async {
     final returnedImage = await ImagePicker().pickImage(source: source);
     if (returnedImage == null) return;
     File imgFile = File(returnedImage.path);
     List<int> imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
-    final m = MessageModel(
+    final message = MessageModel(
       senderId: id,
-      roomId: '674a0b28628dfde5ad21f103',
+      roomId: roomId,
       file: MediaFile.fromJson({
-        'name': 'imageName.jpg',
-        'type': 'image',
         'base64': imageBytes,
+        'name': returnedImage.name,
+        'type': 'image',
       }),
     );
-    socket.emit('uploadFiles', m.toJson());
-    cubitMessageList.add(m);
+    socket.emit('uploadFiles', message.toJson());
+    cubitMessageList.add(message);
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  sendVideo({required ImageSource source, required Socket socket}) async {
+  sendVideo({required Socket socket, required ImageSource source}) async {
     final returnedVideo = await ImagePicker().pickVideo(source: source);
     if (returnedVideo == null) return;
     File videoFile = File(returnedVideo.path);
     List<int> videoBytes = videoFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
-    final m = MessageModel(
+    final message = MessageModel(
       senderId: id,
-      roomId: '674a0b28628dfde5ad21f103',
+      roomId: roomId,
       file: MediaFile.fromJson({
-        'name': 'imageName.mp4',
-        'type': 'video',
         'base64': videoBytes,
+        'name': returnedVideo.name,
+        'type': 'video',
         'videoData': videoFile
       }),
     );
-    socket.emit('uploadFiles', m.toJson());
-    cubitMessageList.add(m);
+    socket.emit('uploadFiles', message.toJson());
+    cubitMessageList.add(message);
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
@@ -69,18 +68,49 @@ class ChatCubit extends Cubit<ChatState> {
     File file = File(result.files.single.path!);
     List<int> audioBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
-    final m = MessageModel(
+    final message = MessageModel(
       senderId: id,
-      roomId: '674a0b28628dfde5ad21f103',
+      roomId: roomId,
       file: MediaFile.fromJson({
+        'base64': audioBytes,
         'name': result.files.single.name,
         'type': 'file',
-        'base64': audioBytes,
         'soundData': result,
       }),
     );
-    socket.emit('uploadFiles', m.toJson());
-    cubitMessageList.add(m);
+    socket.emit('uploadFiles', message.toJson());
+    cubitMessageList.add(message);
+    emit(ChatSuccess(messagesList: cubitMessageList));
+  }
+
+  sendFile({required Socket socket}) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [
+          'pdf',
+          'txt',
+          'docx',
+          'doc',
+          'ppt',
+          'pptx',
+          'xlsx'
+        ]);
+    if (result == null) return;
+    File file = File(result.files.single.path!);
+    List<int> fileBytes = await file.readAsBytes();
+    String id = await ShardpModel().getSenderId();
+    final message = MessageModel(
+      senderId: id,
+      roomId: roomId,
+      file: MediaFile.fromJson({
+        'base64': fileBytes,
+        'name': result.files.single.name,
+        'type': 'file',
+        'recordData': result.files.single.path,
+      }),
+    );
+    socket.emit('uploadFiles', message.toJson());
+    cubitMessageList.add(message);
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
@@ -88,41 +118,18 @@ class ChatCubit extends Cubit<ChatState> {
     File result = File(path);
     List<int> recordBytes = await result.readAsBytes();
     String id = await ShardpModel().getSenderId();
-    final m = MessageModel(
+    final message = MessageModel(
       senderId: id,
-      roomId: '674a0b28628dfde5ad21f103',
+      roomId: roomId,
       file: MediaFile.fromJson({
-        'name': 'sound.mp3',
-        'type': 'file',
         'base64': recordBytes,
+        'name': path,
+        'type': 'file',
         'recordData': path,
       }),
     );
-    socket.emit('uploadFiles', m.toJson());
-    cubitMessageList.add(m);
-    emit(ChatSuccess(messagesList: cubitMessageList));
-  }
-
-  sendFile({required Socket socket}) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'txt', 'docx', 'doc']);
-    if (result == null) return;
-    File file = File(result.files.single.path!);
-    List<int> fileBytes = await file.readAsBytes();
-    String id = await ShardpModel().getSenderId();
-    final m = MessageModel(
-      senderId: id,
-      roomId: '674a0b28628dfde5ad21f103',
-      file: MediaFile.fromJson({
-        'name': result.files.single.name,
-        'type': 'file',
-        'base64': fileBytes,
-        'recordData': result.files.single.path,
-      }),
-    );
-    socket.emit('uploadFiles', m.toJson());
-    cubitMessageList.add(m);
+    socket.emit('uploadFiles', message.toJson());
+    cubitMessageList.add(message);
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 }

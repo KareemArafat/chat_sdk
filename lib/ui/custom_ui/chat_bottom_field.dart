@@ -1,6 +1,6 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/custom_ui/attachment_bottom_sheet.dart';
-import 'package:chat_sdk/custom_ui/recording_process.dart';
+import 'package:chat_sdk/ui/custom_ui/attachment_bottom_sheet.dart';
+import 'package:chat_sdk/ui/custom_ui/recording_process.dart';
 import 'package:chat_sdk/services/recoding.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -87,6 +87,7 @@ class ChatBottomField extends StatelessWidget {
                         imageFn: imageFn,
                         videoFn: videoFn,
                         soundFn: soundFn,
+                        videoRecordFn: videoRecordFn,
                       );
                     },
                     icon: const Icon(Icons.attach_file, color: baseColor1),

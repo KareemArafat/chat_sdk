@@ -2,8 +2,8 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:flutter/material.dart';
 
-class ChatBubbleL extends StatelessWidget {
-  const ChatBubbleL({super.key, required this.o});
+class TextBubbleL extends StatelessWidget {
+  const TextBubbleL({super.key, required this.o});
   final MessageModel o;
   @override
   Widget build(BuildContext context) {

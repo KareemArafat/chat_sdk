@@ -41,7 +41,7 @@ class MediaFile {
   String type;
   File? videoData;
   FilePickerResult? soundData;
-  String recordData;
+  String? recordData;
 
   MediaFile(this.base64, this.path, this.name, this.type, this.videoData,
       this.soundData, this.recordData);

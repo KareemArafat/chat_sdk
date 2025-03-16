@@ -1,16 +1,15 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/custom_ui/chat_app_bar.dart';
-import 'package:chat_sdk/custom_ui/chat_bottom_field.dart';
+import 'package:chat_sdk/ui/custom_ui/chat_app_bar.dart';
+import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/recoding.dart';
 import 'package:chat_sdk/services/socket.dart';
-import 'package:chat_sdk/ui/chat_bubble.dart';
-import 'package:chat_sdk/ui/file_bubble.dart';
-import 'package:chat_sdk/ui/image_bubble.dart';
-import 'package:chat_sdk/ui/video_bubble.dart';
-import 'package:chat_sdk/ui/voice_bubble.dart';
+import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
+import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
+import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
+import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -75,7 +74,7 @@ class _ChatPageState extends State<ChatPage> {
                     itemBuilder: (context, index) {
                       if (messageList[index].senderId == widget.id &&
                           messageList[index].text != null) {
-                        return ChatBubbleL(o: messageList[index]);
+                        return TextBubbleL(o: messageList[index]);
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].text != null) {
                         return ChatBubbleR(o: messageList[index]);
@@ -113,7 +112,7 @@ class _ChatPageState extends State<ChatPage> {
                       .sendSound(socket: socketService.socket);
                 },
                 fileFn: () {
-                   Navigator.pop(context);
+                  Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context)
                       .sendFile(socket: socketService.socket);
                 },

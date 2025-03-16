@@ -1,10 +1,10 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/custom_ui/chat_home_card.dart';
+import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/pages/search_page.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
-import 'package:chat_sdk/ui/add_chat.dart';
+import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

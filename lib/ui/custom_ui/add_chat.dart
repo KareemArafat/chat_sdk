@@ -1,6 +1,6 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
-import 'package:chat_sdk/ui/custom_field.dart';
+import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
 
 void addChat(BuildContext context) {
