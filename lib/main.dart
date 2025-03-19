@@ -27,45 +27,9 @@ class ChatMe extends StatelessWidget {
           create: (context) => ShardCubit(),
         ),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(scaffoldBackgroundColor: Colors.transparent),
-        builder: (context, child) {
-          return GradientScaffold(child: child!);
-        },
-        home: const Auth(),
-      ),
-    );
-  }
-}
-
-class GradientScaffold extends StatelessWidget {
-  final Widget child;
-  const GradientScaffold({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF17193E),
-              Color.fromARGB(136, 53, 3, 94),
-              Color.fromARGB(173, 107, 2, 220),
-              Color.fromARGB(235, 112, 221, 233),
-            ],
-            stops: [
-            0.005, 
-            0.3, 
-            0.6, 
-            1.0, 
-          ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(child: child),
+        home: Auth(),
       ),
     );
   }
