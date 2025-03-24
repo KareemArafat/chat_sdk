@@ -14,7 +14,7 @@ class AuthCubit extends Cubit<AuthStates> {
       ShardpModel().setLoginValue();
       emit(LoginSuccess());
     } catch (e) {
-      emit(LoginFailure(errorMessage: 'Email or password is not valid'));
+      emit(LoginFailure(errorMessage: e.toString()));
     }
   }
 
@@ -33,7 +33,7 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(SignSuccess());
     } catch (e) {
       emit(
-          SignFailure(errorMessage: 'This email is already used .. try again'));
+          SignFailure(errorMessage:  e.toString()));
     }
   }
 }

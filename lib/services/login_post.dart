@@ -14,16 +14,18 @@ class LoginPost {
         'password': password,
       },
     );
-    
+
     final firstName = responseData['data']['user']['firstname'];
     final lastName = responseData['data']['user']['lastname'];
-    final senderId = responseData['data']['user']['_id'];
+    final id = responseData['data']['user']['_id'];
     final token = responseData['data']['token'];
-    // List<String> roomId = responseData['data']['user']['rooms'];
+    final userName = responseData['data']['user']['username'];
+
     await ShardpModel().setFirstName(firstName);
     await ShardpModel().setLastName(lastName);
-    await ShardpModel().setSenderId(senderId);
+    await ShardpModel().setSenderId(id);
     await ShardpModel().setToken(token);
+    await ShardpModel().setUserName(userName);
 
     return responseData;
   }

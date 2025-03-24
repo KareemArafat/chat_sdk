@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
+import 'package:chat_sdk/ui/bubbles_ui/record_bubble.dart';
+import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_app_bar.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
@@ -34,6 +38,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
+    log(widget.token);
     socketService.connect(widget.token);
     super.initState();
   }
@@ -58,15 +63,21 @@ class _ChatPageState extends State<ChatPage> {
             title: const ChatAppBar()),
         body: Column(
           children: [
-            Expanded(
-              child: BlocConsumer<ChatCubit, ChatState>(
-                listener: (context, state) {
-                  if (state is ChatSuccess) {
-                    messageList = state.messagesList;
-                  }
-                },
-                builder: (context, state) {
-                  return ListView.builder(
+            BlocConsumer<ChatCubit, ChatState>(
+              listener: (context, state) {
+                if (state is ChatSuccess) {
+                  messageList = state.messagesList;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.easeIn);
+                  });
+                }
+              },
+              builder: (context, state) {
+                return Expanded(
+                  child: ListView.builder(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     controller: scrollController,
@@ -93,16 +104,30 @@ class _ChatPageState extends State<ChatPage> {
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'file') {
                         return FileBubble(o: messageList[index]);
-                      } else {
-                        return null;
+                      } else if (messageList[index].senderId != widget.id &&
+                          messageList[index].file!.type == 'file') {
+                        return FileBubble(o: messageList[index]);
+                      } else if (messageList[index].senderId == widget.id &&
+                          messageList[index].file!.type == 'sound') {
+                        return SoundBubble(o: messageList[index]);
+                      } else if (messageList[index].senderId != widget.id &&
+                          messageList[index].file!.type == 'sound') {
+                        return SoundBubble(o: messageList[index]);
+                      } else if (messageList[index].senderId == widget.id &&
+                          messageList[index].file!.type == 'record') {
+                        return RecordBubble(o: messageList[index]);
+                      } else if (messageList[index].senderId != widget.id &&
+                          messageList[index].file!.type == 'record') {
+                        return RecordBubble(o: messageList[index]);
                       }
+                      return null;
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
             Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(2),
               child: ChatBottomField(
                 recordObj: recordService,
                 socketObj: socketService.socket,
@@ -135,6 +160,7 @@ class _ChatPageState extends State<ChatPage> {
                 },
                 cameraFn: () {
                   Navigator.pop(context);
+
                   BlocProvider.of<ChatCubit>(context).sendImage(
                       source: ImageSource.camera, socket: socketService.socket);
                 },

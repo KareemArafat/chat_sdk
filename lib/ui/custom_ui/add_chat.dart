@@ -13,7 +13,7 @@ void addChat(BuildContext context) {
           borderRadius: BorderRadius.circular(30),
         ),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.25,
           child: Column(

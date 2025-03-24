@@ -27,9 +27,10 @@ class ChatMe extends StatelessWidget {
           create: (context) => ShardCubit(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Auth(),
+        theme: ThemeData(scaffoldBackgroundColor: Colors.transparent),
+        home: const Auth(),
       ),
     );
   }

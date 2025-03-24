@@ -74,7 +74,7 @@ class ChatCubit extends Cubit<ChatState> {
       file: MediaFile.fromJson({
         'base64': audioBytes,
         'name': result.files.single.name,
-        'type': 'file',
+        'type': 'sound',
         'soundData': result,
       }),
     );
@@ -124,7 +124,7 @@ class ChatCubit extends Cubit<ChatState> {
       file: MediaFile.fromJson({
         'base64': recordBytes,
         'name': path,
-        'type': 'file',
+        'type': 'record',
         'recordData': path,
       }),
     );

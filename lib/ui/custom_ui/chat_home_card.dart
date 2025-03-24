@@ -1,11 +1,13 @@
 import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 
 class ChatHomeCard extends StatelessWidget {
-  const ChatHomeCard({super.key});
-
+  const ChatHomeCard({super.key, required this.room});
+  final RoomModel room;
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
