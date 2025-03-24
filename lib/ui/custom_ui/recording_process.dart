@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+// ignore: must_be_immutable
 class VoiceRecorderScreen extends StatefulWidget {
   VoiceRecorderScreen(
       {super.key, required this.recordObj, required this.socketObj});
@@ -14,6 +15,7 @@ class VoiceRecorderScreen extends StatefulWidget {
   Socket socketObj;
 
   @override
+  // ignore: library_private_types_in_public_api
   _VoiceRecorderScreenState createState() => _VoiceRecorderScreenState();
 }
 
@@ -55,6 +57,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> {
             duration: _recordingDuration,
             onStop: () async {
               await _stopRecording();
+              // ignore: use_build_context_synchronously
               BlocProvider.of<ChatCubit>(context).sendRecord(
                   socket: widget.socketObj, path: widget.recordObj.audioPath!);
             },

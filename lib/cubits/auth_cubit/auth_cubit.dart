@@ -1,6 +1,6 @@
 import 'package:chat_sdk/cubits/auth_cubit/auth_states.dart';
-import 'package:chat_sdk/services/login_post.dart';
-import 'package:chat_sdk/services/sign_post.dart';
+import 'package:chat_sdk/services/api/login_post.dart';
+import 'package:chat_sdk/services/api/sign_post.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

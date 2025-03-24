@@ -12,10 +12,10 @@ class ShardCubit extends Cubit<ShardState> {
       if (loginValue) {
         emit(CheckSuccess());
       } else {
-        emit(CheckFailure());
+        emit(CheckFailure(errorMess: 'login value is false'));
       }
     } catch (e) {
-      emit(CheckFailure());
+      emit(CheckFailure(errorMess: e.toString()));
     }
   }
 }

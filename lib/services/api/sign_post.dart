@@ -1,5 +1,5 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/services/api_post.dart';
+import 'package:chat_sdk/services/api/api.dart';
 
 class SignPost {
   Future<Map<String, dynamic>> signPostFn({

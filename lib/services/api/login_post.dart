@@ -1,5 +1,5 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/services/api_post.dart';
+import 'package:chat_sdk/services/api/api.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
 
 class LoginPost {

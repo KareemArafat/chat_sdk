@@ -1,6 +1,6 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/get_rooms.dart';
+import 'package:chat_sdk/services/api/get_rooms.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getRoomsCards() async {
-    rooms = (await GetRooms().getRoomsFn(userEmail: 'kareem'))!;
+    rooms = (await GetRooms().getRoomsFn(userEmail: 'kareem'))?? [];
     setState(() {});
   }
 

@@ -14,7 +14,12 @@ class ChatCubit extends Cubit<ChatState> {
 
   sendMess({required Socket socket, required String mess}) async {
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(senderId: id, roomId: roomId, text: mess);
+    final message = MessageModel(
+      senderId: id,
+      roomId: roomId,
+  
+      text: mess,
+    );
     cubitMessageList.add(message);
     socket.emit('sendMessage', message.toJson());
     emit(ChatSuccess(messagesList: List.from(cubitMessageList)));
@@ -27,6 +32,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
+    //  time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -49,6 +55,7 @@ class ChatCubit extends Cubit<ChatState> {
     final message = MessageModel(
       senderId: id,
       roomId: roomId,
+   //   time: DateTime.now(),
       file: MediaFile.fromJson({
         'base64': videoBytes,
         'name': returnedVideo.name,
@@ -69,6 +76,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> audioBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
+   //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -100,6 +108,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> fileBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
+   //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -119,6 +128,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> recordBytes = await result.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
+   //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
