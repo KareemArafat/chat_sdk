@@ -32,7 +32,7 @@ class ImageBubbleL extends StatelessWidget {
               clipBehavior: Clip.hardEdge,
               child: SizedBox(
                 child: Image.memory(
-                  o.file!.base64,
+                  o.file!.dataSend,
                   fit: BoxFit.cover,
                 ),
               ),

@@ -1,5 +1,4 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/pages/chat_page.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
 
@@ -29,12 +28,12 @@ void addChat(BuildContext context) {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ChatPage(token: 'token'),
-                          ));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           const ChatPage(token: 'token'),
+                      //     ));
                     },
                     child: const Text(
                       'Create Chat',

@@ -17,7 +17,6 @@ class ChatCubit extends Cubit<ChatState> {
     final message = MessageModel(
       senderId: id,
       roomId: roomId,
-  
       text: mess,
     );
     cubitMessageList.add(message);
@@ -36,7 +35,7 @@ class ChatCubit extends Cubit<ChatState> {
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
-        'base64': imageBytes,
+        'data': imageBytes,
         'name': returnedImage.name,
         'type': 'image',
       }),
@@ -57,7 +56,7 @@ class ChatCubit extends Cubit<ChatState> {
       roomId: roomId,
    //   time: DateTime.now(),
       file: MediaFile.fromJson({
-        'base64': videoBytes,
+        'data': videoBytes,
         'name': returnedVideo.name,
         'type': 'video',
         'videoData': videoFile
@@ -80,7 +79,7 @@ class ChatCubit extends Cubit<ChatState> {
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
-        'base64': audioBytes,
+        'data': audioBytes,
         'name': result.files.single.name,
         'type': 'sound',
         'soundData': result,
@@ -112,7 +111,7 @@ class ChatCubit extends Cubit<ChatState> {
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
-        'base64': fileBytes,
+        'data': fileBytes,
         'name': result.files.single.name,
         'type': 'file',
         'recordData': result.files.single.path,
@@ -132,7 +131,7 @@ class ChatCubit extends Cubit<ChatState> {
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
-        'base64': recordBytes,
+        'data': recordBytes,
         'name': path,
         'type': 'record',
         'recordData': path,

@@ -20,9 +20,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.token, this.id});
+  const ChatPage({
+    super.key,
+    required this.token,
+    this.id,
+    required this.roomId,
+  });
   final String token;
   final String? id;
+  final String roomId;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -53,8 +59,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Positioned.fill(
-        child: Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover),
-      ),
+          child:
+              Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover)),
       Scaffold(
         appBar: AppBar(
             iconTheme: const IconThemeData(color: Colors.white),

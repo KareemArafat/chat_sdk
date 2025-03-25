@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getRoomsCards() async {
-    rooms = (await GetRooms().getRoomsFn(userEmail: 'kareem'))?? [];
+    rooms = (await GetRooms().getRoomsFn(userEmail: 'kareem')) ?? [];
     setState(() {});
   }
 
@@ -81,9 +81,7 @@ class _HomePageState extends State<HomePage> {
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),
-              onPressed: () async {
-                print(await GetRooms().getRoomsFn(userEmail: 'kareem'));
-              },
+              onPressed: () {},
               color: Colors.white,
             ),
           ],

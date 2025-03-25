@@ -32,7 +32,7 @@ class SocketService {
     });
   }
 
-  void joinRoom(String roomName) {
-    socket.emit('join_room', roomName);
+  void joinRoom(String roomId) {
+    socket.emit('joinRoom', roomId);
   }
 }

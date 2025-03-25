@@ -1,27 +1,52 @@
 class RoomModel {
   final String roomId;
-  final String name;
-  final String type;
-  final String? lastMessage;
-  final String? time;
-  final List<String> users;
+  final String? name;
+  final String? type;
+  final LastMassage? lastMessage;
+  final List<String>? users;
 
   RoomModel(
       {required this.roomId,
-      required this.name,
-      required this.type,
+      this.name,
+      this.type,
       this.lastMessage,
-      this.time,
-      required this.users});
+      this.users});
 
   factory RoomModel.fromJson(jsonData) {
     return RoomModel(
-      roomId: jsonData['_id'],
+      roomId: jsonData['id'],
       name: jsonData['name'],
       type: jsonData['type'],
       users: List<String>.from(jsonData['members']),
-  //    lastMessage: jsonData[''],
-    //  time: jsonData[''],
+      lastMessage: jsonData['lastMessage'] != null
+          ? LastMassage.fromJson(jsonData['lastMessage'])
+          : null,
+    );
+  }
+}
+
+class LastMassage {
+  final String messType;
+  final String time;
+  final String? text;
+  final String? fileName;
+  final String? fileType;
+
+  LastMassage({
+    required this.messType,
+    required this.time,
+    this.text,
+    this.fileName,
+    this.fileType,
+  });
+
+  factory LastMassage.fromJson(jsonData) {
+    return LastMassage(
+      messType: jsonData['type'],
+      time: jsonData['createdAt'],
+      text: jsonData['content'],
+      fileName: jsonData['fileName'],
+      fileType: jsonData['fileType'],
     );
   }
 }

@@ -8,7 +8,6 @@ class GetRooms {
     try {
       final dataList =
           await Api().get(url: "$baseUrl/rooms?username=$userEmail");
-
       List<RoomModel>? roomsList = [];
       for (int i = 0; i < dataList['rooms'].length; i++) {
         roomsList.add(RoomModel.fromJson(dataList['rooms'][i]));

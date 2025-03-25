@@ -11,7 +11,7 @@ class MessageModel {
   MessageModel({
     required this.senderId,
     required this.roomId,
-  //  required this.time,
+    //  required this.time,
     this.text,
     this.file,
   });
@@ -20,7 +20,7 @@ class MessageModel {
     return MessageModel(
       senderId: jsonData['senderId'],
       roomId: jsonData['roomId'],
- //     time: DateTime.parse(jsonData['time']),
+      //     time: DateTime.parse(jsonData['time']),
       text: jsonData['text'],
       file: jsonData['file'] != null
           ? MediaFile.fromJson(jsonData['file'])
@@ -31,7 +31,7 @@ class MessageModel {
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
         'roomId': roomId,
-   //     'time': time,
+        //     'time': time,
         'text': text,
         'file': file?.toJson(),
       };
@@ -39,7 +39,7 @@ class MessageModel {
 
 class MediaFile {
   // ignore: prefer_typing_uninitialized_variables
-  var base64;
+  var dataSend;
   String? path;
   String name;
   String type;
@@ -47,12 +47,12 @@ class MediaFile {
   FilePickerResult? soundData;
   String? recordData;
 
-  MediaFile(this.base64, this.path, this.name, this.type, this.videoData,
+  MediaFile(this.dataSend, this.path, this.name, this.type, this.videoData,
       this.soundData, this.recordData);
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(
-      jsonData['base64'],
+      jsonData['data'],
       jsonData['path'],
       jsonData['name'],
       jsonData['type'],
@@ -63,7 +63,7 @@ class MediaFile {
   }
 
   Map<String, dynamic> toJson() => {
-        'base64': base64,
+        'data': dataSend,
         'path': path,
         'name': name,
         'type': type,

@@ -7,9 +7,16 @@ import 'package:flutter/material.dart';
 class ChatHomeCard extends StatelessWidget {
   const ChatHomeCard({super.key, required this.room});
   final RoomModel room;
-  
+
   @override
   Widget build(BuildContext context) {
+    String lastMassage;
+    if (room.lastMessage!.messType == 'text') {
+      lastMassage = room.lastMessage!.text!;
+    } else {
+      lastMassage = room.lastMessage!.fileName!;
+    }
+
     return GestureDetector(
       onTap: () async {
         String token = await ShardpModel().getToken();
@@ -18,18 +25,20 @@ class ChatHomeCard extends StatelessWidget {
           return ChatPage(
             token: token,
             id: id,
+            roomId: room.roomId,
           );
         }));
       },
-      child: const Column(
+      child: Column(
         children: [
           ListTile(
-            leading: CircleAvatar(
+            leading: const CircleAvatar(
               radius: 30,
               backgroundImage: AssetImage('assets/images/user_image.jpg'),
             ),
             title: Text(
-              'name',
+              room.users!.first,
+              // ignore: prefer_const_constructors
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -37,21 +46,21 @@ class ChatHomeCard extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              'message content',
-              style: TextStyle(
+              lastMassage,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,
               ),
             ),
             trailing: Text(
-              '8:00',
-              style: TextStyle(
+              room.lastMessage!.time,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,
               ),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 5),
             child: Divider(
               color: baseColor1,
