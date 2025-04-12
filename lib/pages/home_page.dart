@@ -1,6 +1,7 @@
 import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
+import 'package:chat_sdk/cubits/lists_cubit/lists_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/api/get_rooms.dart';
 import 'package:chat_sdk/services/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
@@ -9,6 +10,7 @@ import 'package:chat_sdk/pages/search_page.dart';
 import 'package:chat_sdk/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.token});
@@ -30,8 +32,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getRoomsCards() async {
-    rooms = (await GetRooms().getRoomsFn(userEmail: 'kareem')) ?? [];
-    setState(() {});
+    BlocProvider.of<ListsCubit>(context).getHomeList();
   }
 
   @override
@@ -97,11 +98,44 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.only(top: 20, bottom: 5, left: 8, right: 8),
-          itemCount: rooms.length,
-          itemBuilder: (context, index) {
-            return ChatHomeCard(room: rooms[index],socketService: socketService,);
+        body: BlocConsumer<ListsCubit, ListsState>(
+          listener: (context, state) {
+            if (state is ListsSuccess) {
+              rooms = state.rooms;
+            }
+          },
+          builder: (context, state) {
+            if (state is ListsLoading) {
+              return const Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: baseColor1,
+                    backgroundColor: Colors.white,
+                    strokeAlign: -5,
+                  ),
+                ),
+              );
+            }
+            if (state is ListsFailure) {
+              print('yessssssssss');
+              return const Center(
+                child: Text('No Chats'),
+              );
+            }
+            return ListView.builder(
+              padding:
+                  const EdgeInsets.only(top: 20, bottom: 5, left: 8, right: 8),
+              itemCount: rooms.length,
+              itemBuilder: (context, index) {
+                return ChatHomeCard(
+                  room: rooms[index],
+                  socketService: socketService,
+                );
+              },
+            );
           },
         ));
   }

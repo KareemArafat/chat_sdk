@@ -1,5 +1,6 @@
 import 'package:chat_sdk/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
 import 'package:chat_sdk/cubits/shard_cubit/shard_cubit.dart';
 import 'package:chat_sdk/shardP/auth.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ class ChatMe extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ShardCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ListsCubit(),
         ),
       ],
       child: MaterialApp(
