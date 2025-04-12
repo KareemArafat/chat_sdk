@@ -35,7 +35,7 @@ class LoginPage extends StatelessWidget {
             listener: (context, state) {
               if (state is LoginSuccess) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const HomePage();
+                  return HomePage(token: state.token);
                 }));
               }
               if (state is LoginFailure) {

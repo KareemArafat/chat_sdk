@@ -3,6 +3,7 @@ import 'package:chat_sdk/cubits/shard_cubit/shard_state.dart';
 import 'package:chat_sdk/pages/home_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/shardP/app_loading_screen.dart';
+import 'package:chat_sdk/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,11 @@ class _AuthState extends State<Auth> {
     BlocProvider.of<ShardCubit>(context).check();
   }
 
+  getToken() async {
+    String token = await ShardpModel().getToken();
+    HomePage(token: token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShardCubit, ShardState>(
@@ -27,7 +33,7 @@ class _AuthState extends State<Auth> {
         if (state is CheckFailure) {
           return const LoginPage();
         } else if (state is CheckSuccess) {
-          return const HomePage();
+          return HomePage(token: state.token);
         } else {
           return const AppLoadingScreen();
         }

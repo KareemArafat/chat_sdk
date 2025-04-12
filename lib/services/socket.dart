@@ -25,14 +25,11 @@ class SocketService {
   }
 
   void createRoom(List members, String? roomName) {
-    socket.emit('createRoom', {
-      'type': 'direct',
-      'roomName': roomName,
-      'members': members,
-    });
+    socket.emit('createRoom',
+        {'type': 'direct', 'roomName': roomName, 'members': members});
   }
 
   void joinRoom(String roomId) {
-    socket.emit('joinRoom', roomId);
+    socket.emit('joinRoom', {'roomId': roomId});
   }
 }

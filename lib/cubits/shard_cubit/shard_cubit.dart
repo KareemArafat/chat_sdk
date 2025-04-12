@@ -10,7 +10,8 @@ class ShardCubit extends Cubit<ShardState> {
     emit(CheckInitial());
     try {
       if (loginValue) {
-        emit(CheckSuccess());
+        String token = await ShardpModel().getToken();
+        emit(CheckSuccess(token: token));
       } else {
         emit(CheckFailure(errorMess: 'login value is false'));
       }

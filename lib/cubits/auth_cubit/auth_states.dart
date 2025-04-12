@@ -4,7 +4,10 @@ class LoginInitial extends AuthStates {}
 
 class LoginLoading extends AuthStates {}
 
-class LoginSuccess extends AuthStates {}
+class LoginSuccess extends AuthStates {
+  final String token;
+  LoginSuccess({required this.token});
+}
 
 class LoginFailure extends AuthStates {
   String errorMessage;

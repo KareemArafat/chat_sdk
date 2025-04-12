@@ -1,6 +1,7 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/services/api/get_rooms.dart';
+import 'package:chat_sdk/services/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
@@ -10,17 +11,20 @@ import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.token});
+  final String token;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final SocketService socketService = SocketService();
   List<RoomModel> rooms = [];
 
   @override
   void initState() {
+    socketService.connect(widget.token);
     getRoomsCards();
     super.initState();
   }
@@ -97,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.only(top: 20, bottom: 5, left: 8, right: 8),
           itemCount: rooms.length,
           itemBuilder: (context, index) {
-            return ChatHomeCard(room: rooms[index]);
+            return ChatHomeCard(room: rooms[index],socketService: socketService,);
           },
         ));
   }

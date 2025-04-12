@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
@@ -22,20 +20,19 @@ import 'package:video_player/video_player.dart';
 class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
-    required this.token,
     this.id,
     required this.roomId,
+    required this.socketService,
   });
-  final String token;
   final String? id;
   final String roomId;
+  final SocketService socketService;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final SocketService socketService = SocketService();
   late RecordService recordService = RecordService();
   final TextEditingController textController = TextEditingController();
   VideoPlayerController? videoController;
@@ -44,16 +41,14 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    log(widget.token);
-    socketService.connect(widget.token);
     super.initState();
   }
 
-  @override
-  void dispose() {
-    socketService.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   widget.socketService.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,45 +130,48 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(2),
               child: ChatBottomField(
+                emojiFn: () {
+                  widget.socketService.joinRoom('674a0b28628dfde5ad21f103');
+                },
                 recordObj: recordService,
-                socketObj: socketService.socket,
+                socketObj: widget.socketService.socket,
                 soundFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context)
-                      .sendSound(socket: socketService.socket);
+                      .sendSound(socket: widget.socketService.socket);
                 },
                 fileFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context)
-                      .sendFile(socket: socketService.socket);
+                      .sendFile(socket: widget.socketService.socket);
                 },
                 videoRecordFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendVideo(
-                      source: ImageSource.camera, socket: socketService.socket);
+                      source: ImageSource.camera, socket: widget.socketService.socket);
                 },
                 videoFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendVideo(
                       source: ImageSource.gallery,
-                      socket: socketService.socket);
+                      socket: widget.socketService.socket);
                 },
                 imageFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendImage(
                       source: ImageSource.gallery,
-                      socket: socketService.socket);
+                      socket: widget.socketService.socket);
                 },
                 cameraFn: () {
                   Navigator.pop(context);
 
                   BlocProvider.of<ChatCubit>(context).sendImage(
-                      source: ImageSource.camera, socket: socketService.socket);
+                      source: ImageSource.camera, socket: widget.socketService.socket);
                 },
                 controller: textController,
                 submitted: (p0) {
                   BlocProvider.of<ChatCubit>(context)
-                      .sendMess(socket: socketService.socket, mess: p0);
+                      .sendMess(socket: widget.socketService.socket, mess: p0);
                   textController.clear();
                 },
               ),
