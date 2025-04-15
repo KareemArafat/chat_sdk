@@ -2,8 +2,8 @@ import 'package:chat_sdk/cubits/shard_cubit/shard_cubit.dart';
 import 'package:chat_sdk/cubits/shard_cubit/shard_state.dart';
 import 'package:chat_sdk/pages/home_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
-import 'package:chat_sdk/shardP/app_loading_screen.dart';
-import 'package:chat_sdk/shardP/shard_p_model.dart';
+import 'package:chat_sdk/services/shardP/app_loading_screen.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

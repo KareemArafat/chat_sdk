@@ -6,8 +6,8 @@ import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_app_bar.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
-import 'package:chat_sdk/services/recoding.dart';
-import 'package:chat_sdk/services/socket.dart';
+import 'package:chat_sdk/services/socket/recoding.dart';
+import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
@@ -43,12 +43,6 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
   }
-
-  // @override
-  // void dispose() {
-  //   widget.socketService.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -130,48 +124,57 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(2),
               child: ChatBottomField(
-                emojiFn: () {
-                  widget.socketService.joinRoom('674a0b28628dfde5ad21f103');
-                },
+                emojiFn: () {},
                 recordObj: recordService,
                 socketObj: widget.socketService.socket,
+                roomId: widget.roomId,
                 soundFn: () {
                   Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context)
-                      .sendSound(socket: widget.socketService.socket);
+                  BlocProvider.of<ChatCubit>(context).sendSound(
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 fileFn: () {
                   Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context)
-                      .sendFile(socket: widget.socketService.socket);
+                  BlocProvider.of<ChatCubit>(context).sendFile(
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 videoRecordFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendVideo(
-                      source: ImageSource.camera, socket: widget.socketService.socket);
+                      source: ImageSource.camera,
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 videoFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendVideo(
                       source: ImageSource.gallery,
-                      socket: widget.socketService.socket);
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 imageFn: () {
                   Navigator.pop(context);
                   BlocProvider.of<ChatCubit>(context).sendImage(
                       source: ImageSource.gallery,
-                      socket: widget.socketService.socket);
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 cameraFn: () {
                   Navigator.pop(context);
 
                   BlocProvider.of<ChatCubit>(context).sendImage(
-                      source: ImageSource.camera, socket: widget.socketService.socket);
+                      source: ImageSource.camera,
+                      socket: widget.socketService.socket,
+                      roomId: widget.roomId);
                 },
                 controller: textController,
                 submitted: (p0) {
-                  BlocProvider.of<ChatCubit>(context)
-                      .sendMess(socket: widget.socketService.socket, mess: p0);
+                  BlocProvider.of<ChatCubit>(context).sendMess(
+                      socket: widget.socketService.socket,
+                      mess: p0,
+                      roomId: widget.roomId);
                   textController.clear();
                 },
               ),

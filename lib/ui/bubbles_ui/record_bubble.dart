@@ -3,6 +3,7 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
+import 'package:intl/intl.dart';
 
 class RecordBubble extends StatefulWidget {
   final MessageModel o;
@@ -53,24 +54,40 @@ class AudioPlayerState extends State<RecordBubble> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
-          decoration: BoxDecoration(
-            color: baseColor1,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          height: 50,
-          width: 220,
-          child: Row(
-            children: <Widget>[
-              playIcon(),
-              sliderLine(),
-              const Icon(
-                Icons.mic,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
+            decoration: BoxDecoration(
+              color: baseColor1,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            height: 55,
+            width: 220,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: <Widget>[
+                      playIcon(),
+                      sliderLine(),
+                      const Icon(Icons.mic, color: Colors.white),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15, bottom: 2),
+                    child: Text(
+                      DateFormat('hh:mm a').format(DateTime.now()),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }
@@ -105,7 +122,6 @@ class AudioPlayerState extends State<RecordBubble> {
     return SizedBox(
       width: 140,
       child: Slider(
-        
         activeColor: Colors.white,
         inactiveColor: Colors.grey,
         onChanged: (v) {

@@ -1,7 +1,7 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/ui/custom_ui/attachment_bottom_sheet.dart';
 import 'package:chat_sdk/ui/custom_ui/recording_process.dart';
-import 'package:chat_sdk/services/recoding.dart';
+import 'package:chat_sdk/services/socket/recoding.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -20,7 +20,8 @@ class ChatBottomField extends StatelessWidget {
       this.fileFn,
       this.videoRecordFn,
       required this.recordObj,
-      required this.socketObj});
+      required this.socketObj,
+      required this.roomId});
   final Function(String)? changed;
   final Function(String)? submitted;
   final TextEditingController? controller;
@@ -34,6 +35,7 @@ class ChatBottomField extends StatelessWidget {
   final void Function()? videoRecordFn;
   final RecordService recordObj;
   final Socket socketObj;
+  final String roomId;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +102,7 @@ class ChatBottomField extends StatelessWidget {
           VoiceRecorderScreen(
             recordObj: recordObj,
             socketObj: socketObj,
+            roomId: roomId,
           ),
         ],
       ),

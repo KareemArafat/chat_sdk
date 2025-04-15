@@ -2,12 +2,13 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
 import 'package:chat_sdk/cubits/lists_cubit/lists_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/socket.dart';
+import 'package:chat_sdk/services/api/get_file.dart';
+import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/pages/search_page.dart';
-import 'package:chat_sdk/shardP/shard_p_model.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) => const LoginPage(),
                     ));
+                socketService.dispose();
               },
               icon: const Icon(Icons.arrow_back)),
           iconTheme: const IconThemeData(color: Colors.white),
@@ -71,9 +73,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: baseAppBarColor,
           actions: [
             IconButton(
-              icon: const Icon(Icons.person_add),
+              icon: const Icon(Icons.person_add_alt_1),
               onPressed: () {
-                addChat(context);
+                addChat(context, socketService);
               },
               color: Colors.white,
             ),
@@ -85,8 +87,11 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () {},
+              icon: const Icon(Icons
+                  .more_vert), /////////////////////////////////////////////
+              onPressed: () {
+                GetFile().getFileFn(path: '1744673738723-db53c8cb.wav', token: widget.token);
+              },
               color: Colors.white,
             ),
           ],
@@ -101,7 +106,7 @@ class _HomePageState extends State<HomePage> {
         body: BlocConsumer<ListsCubit, ListsState>(
           listener: (context, state) {
             if (state is ListsSuccess) {
-              rooms = state.rooms;
+              rooms = state.rooms!;
             }
           },
           builder: (context, state) {
@@ -117,12 +122,6 @@ class _HomePageState extends State<HomePage> {
                     strokeAlign: -5,
                   ),
                 ),
-              );
-            }
-            if (state is ListsFailure) {
-              print('yessssssssss');
-              return const Center(
-                child: Text('No Chats'),
               );
             }
             return ListView.builder(

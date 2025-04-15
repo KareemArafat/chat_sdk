@@ -1,6 +1,7 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 
@@ -53,7 +54,7 @@ class _VideoBubbleState extends State<VideoBubble> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
-          height: MediaQuery.of(context).size.height / 3.2,
+          height: MediaQuery.of(context).size.height / 2.74,
           width: MediaQuery.of(context).size.width / 2,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -66,21 +67,41 @@ class _VideoBubbleState extends State<VideoBubble> {
               ? Stack(
                   alignment: Alignment.center,
                   children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: SizedBox.expand(
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: SizedBox(
-                            width: controller!.value.size.width,
-                            height: controller!.value.size.height,
-                            child: VideoPlayer(controller!),
+                    Column(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: SizedBox.expand(
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                child: SizedBox(
+                                  width: controller!.value.size.width,
+                                  height: controller!.value.size.height,
+                                  child: VideoPlayer(controller!),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(right: 10, bottom: 2),
+                            child: Text(
+                              DateFormat('hh:mm a').format(DateTime.now()),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     IconButton(
                       onPressed: () {

@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
 
-void addChat(BuildContext context) {
+void addChat(BuildContext context, SocketService socketService) {
+  String user = 'ss';
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -20,20 +24,21 @@ void addChat(BuildContext context) {
             children: [
               CustomField(
                 hint: 'Enter user id',
-                submit: (p0) {},
+                change: (p0) => user = p0,
               ),
               const SizedBox(height: 20),
               Row(
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) =>
-                      //           const ChatPage(token: 'token'),
-                      //     ));
+                      // Navigator.of(context).pop();
+                      try {
+                        socketService.createRoom(members: [user]);
+                        
+                      } catch (e) {
+                        log('noooooooooooooo');
+                  //      Text('fjfkhgfgf');
+                      }
                     },
                     child: const Text(
                       'Create Chat',

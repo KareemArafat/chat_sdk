@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/models/message_model.dart';
-import 'package:chat_sdk/shardP/shard_p_model.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,9 +10,11 @@ import 'package:socket_io_client/socket_io_client.dart';
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
   List<MessageModel> cubitMessageList = [];
-  String roomId = '674a0b28628dfde5ad21f103';
 
-  sendMess({required Socket socket, required String mess}) async {
+  sendMess(
+      {required Socket socket,
+      required String mess,
+      required String roomId}) async {
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
       senderId: id,
@@ -24,14 +26,15 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: List.from(cubitMessageList)));
   }
 
-  sendImage({required Socket socket, required ImageSource source}) async {
+  sendImage({required Socket socket, required ImageSource source,
+      required String roomId}) async {
     final returnedImage = await ImagePicker().pickImage(source: source);
     if (returnedImage == null) return;
     File imgFile = File(returnedImage.path);
     List<int> imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-    //  time: DateTime.now(),
+      //  time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -45,7 +48,8 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  sendVideo({required Socket socket, required ImageSource source}) async {
+  sendVideo({required Socket socket, required ImageSource source,
+      required String roomId}) async {
     final returnedVideo = await ImagePicker().pickVideo(source: source);
     if (returnedVideo == null) return;
     File videoFile = File(returnedVideo.path);
@@ -54,7 +58,7 @@ class ChatCubit extends Cubit<ChatState> {
     final message = MessageModel(
       senderId: id,
       roomId: roomId,
-   //   time: DateTime.now(),
+      //   time: DateTime.now(),
       file: MediaFile.fromJson({
         'data': videoBytes,
         'name': returnedVideo.name,
@@ -67,7 +71,8 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  sendSound({required Socket socket}) async {
+  sendSound({required Socket socket,
+      required String roomId}) async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
     if (result == null) return;
@@ -75,7 +80,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> audioBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-   //   time: DateTime.now(),
+      //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -90,7 +95,8 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  sendFile({required Socket socket}) async {
+  sendFile({required Socket socket,
+      required String roomId}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: [
@@ -107,7 +113,7 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> fileBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-   //   time: DateTime.now(),
+      //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -122,12 +128,13 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatSuccess(messagesList: cubitMessageList));
   }
 
-  sendRecord({required Socket socket, required String path}) async {
+  sendRecord({required Socket socket, required String path,
+      required String roomId}) async {
     File result = File(path);
     List<int> recordBytes = await result.readAsBytes();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-   //   time: DateTime.now(),
+      //   time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({

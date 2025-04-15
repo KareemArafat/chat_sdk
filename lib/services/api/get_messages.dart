@@ -8,7 +8,6 @@ class GetMessages {
     try {
       final dataList =
           await Api().get(url: "$baseUrl/rooms?username=$userEmail");
-
       List<MessageModel>? messagesList = [];
       for (int i = 0; i < dataList.length; i++) {
         messagesList.add(MessageModel.fromJson(dataList[i]));

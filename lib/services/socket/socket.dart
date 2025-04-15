@@ -14,8 +14,8 @@ class SocketService {
     socket.connect();
     socket.onConnect((_) => log('server is connected ^_^'));
     socket.onDisconnect((_) => log('server is disconnected >_<'));
-    socket.onError((error) => log('Socket error: $error'));
-    socket.on('error', (error) => log('Socket error: $error'));
+    socket.onError((error) => log('Socket error client side: $error'));
+    socket.on('error', (error) => log('Socket error server side: $error'));
   }
 
   void dispose() {
@@ -24,7 +24,7 @@ class SocketService {
     log('Socket connection closed ✔✔');
   }
 
-  void createRoom(List members, String? roomName) {
+  void createRoom({required List<String> members, String? roomName}) {
     socket.emit('createRoom',
         {'type': 'direct', 'roomName': roomName, 'members': members});
   }
