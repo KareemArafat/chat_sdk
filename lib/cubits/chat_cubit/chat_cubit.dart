@@ -9,7 +9,6 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
-  List<MessageModel> cubitMessageList = [];
 
   sendMess(
       {required Socket socket,
@@ -21,12 +20,13 @@ class ChatCubit extends Cubit<ChatState> {
       roomId: roomId,
       text: mess,
     );
-    cubitMessageList.add(message);
     socket.emit('sendMessage', message.toJson());
-    emit(ChatSuccess(messagesList: List.from(cubitMessageList)));
+    //  emit(ChatSuccess(mess: message));
   }
 
-  sendImage({required Socket socket, required ImageSource source,
+  sendImage(
+      {required Socket socket,
+      required ImageSource source,
       required String roomId}) async {
     final returnedImage = await ImagePicker().pickImage(source: source);
     if (returnedImage == null) return;
@@ -34,7 +34,6 @@ class ChatCubit extends Cubit<ChatState> {
     List<int> imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-      //  time: DateTime.now(),
       senderId: id,
       roomId: roomId,
       file: MediaFile.fromJson({
@@ -44,11 +43,12 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-    cubitMessageList.add(message);
-    emit(ChatSuccess(messagesList: cubitMessageList));
+  //  emit(ChatSuccess(mess: message));
   }
 
-  sendVideo({required Socket socket, required ImageSource source,
+  sendVideo(
+      {required Socket socket,
+      required ImageSource source,
       required String roomId}) async {
     final returnedVideo = await ImagePicker().pickVideo(source: source);
     if (returnedVideo == null) return;
@@ -67,12 +67,10 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-    cubitMessageList.add(message);
-    emit(ChatSuccess(messagesList: cubitMessageList));
+    emit(ChatSuccess(mess: message));
   }
 
-  sendSound({required Socket socket,
-      required String roomId}) async {
+  sendSound({required Socket socket, required String roomId}) async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
     if (result == null) return;
@@ -91,12 +89,10 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-    cubitMessageList.add(message);
-    emit(ChatSuccess(messagesList: cubitMessageList));
+    emit(ChatSuccess(mess: message));
   }
 
-  sendFile({required Socket socket,
-      required String roomId}) async {
+  sendFile({required Socket socket, required String roomId}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: [
@@ -124,11 +120,12 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-    cubitMessageList.add(message);
-    emit(ChatSuccess(messagesList: cubitMessageList));
+    emit(ChatSuccess(mess: message));
   }
 
-  sendRecord({required Socket socket, required String path,
+  sendRecord(
+      {required Socket socket,
+      required String path,
       required String roomId}) async {
     File result = File(path);
     List<int> recordBytes = await result.readAsBytes();
@@ -145,7 +142,17 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-    cubitMessageList.add(message);
-    emit(ChatSuccess(messagesList: cubitMessageList));
+    emit(ChatSuccess(mess: message));
+  }
+
+  receiveMess({required Socket socket}) async {
+    String id = await ShardpModel().getSenderId();
+    socket.on('message', (data) {
+      //  MessageModel messageModel = MessageModel.fromJson(data);
+      //  if (id != messageModel.senderId) {
+      print('yes $data');
+      emit(ChatSuccess(mess: MessageModel.fromJson(data)));
+      //  }
+    });
   }
 }

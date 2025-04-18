@@ -1,26 +1,27 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 
 class MessageModel {
   String senderId;
   String roomId;
-  //DateTime time;
+  String? time;
   String? text;
   MediaFile? file;
 
   MessageModel({
     required this.senderId,
     required this.roomId,
-    //  required this.time,
+    this.time,
     this.text,
     this.file,
   });
 
   factory MessageModel.fromJson(jsonData) {
     return MessageModel(
-      senderId: jsonData['senderId'],
+      senderId: jsonData['sender'],
       roomId: jsonData['roomId'],
-      //     time: DateTime.parse(jsonData['time']),
+      time: jsonData['createdAt'],
       text: jsonData['text'],
       file: jsonData['file'] != null
           ? MediaFile.fromJson(jsonData['file'])
@@ -31,18 +32,17 @@ class MessageModel {
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
         'roomId': roomId,
-        //     'time': time,
+        'time': time,
         'text': text,
         'file': file?.toJson(),
       };
 }
 
 class MediaFile {
-  // ignore: prefer_typing_uninitialized_variables
-  var dataSend;
+  Uint8List dataSend;
   String? path;
-  String name;
-  String type;
+  String? name;
+  String? type;
   File? videoData;
   FilePickerResult? soundData;
   String? recordData;

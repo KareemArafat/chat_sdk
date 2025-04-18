@@ -10,9 +10,9 @@ class AuthCubit extends Cubit<AuthStates> {
   loginFn({required String email, required String password}) async {
     emit(LoginLoading());
     try {
-      String token = await ShardpModel().getToken();
       await LoginPost().loginPostFn(email: email, password: password);
-      ShardpModel().setLoginValue();
+      String token = await ShardpModel().getToken();
+      ShardpModel().setLoginValue(flag: true);
       emit(LoginSuccess(token: token));
     } catch (e) {
       emit(LoginFailure(errorMessage: e.toString()));

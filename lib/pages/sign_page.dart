@@ -35,7 +35,8 @@ class SignPage extends StatelessWidget {
           child: BlocConsumer<AuthCubit, AuthStates>(
             listener: (context, state) {
               if (state is SignSuccess) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
                   return const LoginPage();
                 }));
               }
@@ -107,13 +108,12 @@ class SignPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Don't have an account?",
+                            "Do you have an account?",
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           GestureDetector(
                               onTap: () {
-                                Navigator.pop(context);
-                                Navigator.push(context,
+                                Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return const LoginPage();
                                 }));

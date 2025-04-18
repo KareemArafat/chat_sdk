@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatAppBar extends StatelessWidget {
-  const ChatAppBar({super.key});
+  const ChatAppBar({super.key, required this.name});
+
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +17,9 @@ class ChatAppBar extends StatelessWidget {
           ),
         ),
         const Spacer(flex: 1),
-        const Text(
-          'User',
-          style: TextStyle(color: Colors.white, fontSize: 30),
+        Text(
+          name,
+          style: const TextStyle(color: Colors.white, fontSize: 30),
         ),
         const Spacer(
           flex: 3,

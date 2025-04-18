@@ -33,14 +33,16 @@ class LoginPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: BlocConsumer<AuthCubit, AuthStates>(
             listener: (context, state) {
-              if (state is LoginSuccess) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return HomePage(token: state.token);
-                }));
-              }
               if (state is LoginFailure) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+              }
+              if (state is LoginSuccess) {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(token: state.token),
+                    ));
               }
             },
             builder: (context, state) {
@@ -95,11 +97,10 @@ class LoginPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const SignPage();
-                          }));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignPage()));
                         },
                         child: const Text(
                           '  Sign Up',

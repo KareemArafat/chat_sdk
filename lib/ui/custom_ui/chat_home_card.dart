@@ -38,14 +38,25 @@ class ChatHomeCard extends StatelessWidget {
       }
     }
 
+    Future<String> nameFn() async {
+      String email = await ShardpModel().getUserName();
+      if (room.users!.first == email) {
+        return room.users!.last;
+      } else {
+        return room.users!.first;
+      }
+    }
+
     return GestureDetector(
       onTap: () async {
         String id = await ShardpModel().getSenderId();
+        String name = await nameFn();
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ChatPage(
             id: id,
             roomId: room.roomId,
             socketService: socketService,
+            name: name,
           );
         }));
       },
@@ -56,13 +67,23 @@ class ChatHomeCard extends StatelessWidget {
               radius: 30,
               backgroundImage: AssetImage('assets/images/user_image.jpg'),
             ),
-            title: Text(
-              room.users!.last,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+            title: FutureBuilder(
+              future: nameFn(),
+              builder: (context, snapshot) {
+               if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else {
+                  return const Text('No users',
+                      style: TextStyle(color: Colors.grey));
+                }
+              },
             ),
             subtitle: Text(
               messFn(),

@@ -3,27 +3,21 @@ import 'package:chat_sdk/cubits/shard_cubit/shard_state.dart';
 import 'package:chat_sdk/pages/home_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/services/shardP/app_loading_screen.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Auth extends StatefulWidget {
-  const Auth({super.key});
+class ShardScreen extends StatefulWidget {
+  const ShardScreen({super.key});
 
   @override
-  State<Auth> createState() => _AuthState();
+  State<ShardScreen> createState() => _ShardScreenState();
 }
 
-class _AuthState extends State<Auth> {
+class _ShardScreenState extends State<ShardScreen> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ShardCubit>(context).check();
-  }
-
-  getToken() async {
-    String token = await ShardpModel().getToken();
-    HomePage(token: token);
   }
 
   @override

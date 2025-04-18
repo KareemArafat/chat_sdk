@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
 import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void addChat(BuildContext context, SocketService socketService) {
-  String user = 'ss';
+  String user = '';
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -31,14 +31,8 @@ void addChat(BuildContext context, SocketService socketService) {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.of(context).pop();
-                      try {
-                        socketService.createRoom(members: [user]);
-                        
-                      } catch (e) {
-                        log('noooooooooooooo');
-                  //      Text('fjfkhgfgf');
-                      }
+                       BlocProvider.of<ListsCubit>(context).addRoom(socketService: socketService,user: user);
+                        Navigator.of(context).pop();
                     },
                     child: const Text(
                       'Create Chat',

@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShardpModel {
-  Future<void> setLoginValue() async {
+  Future<void> setLoginValue({bool flag=true}) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setBool('Login', true);
+    await sp.setBool('Login', flag);
   }
 
   Future<bool> getLoginValue() async {

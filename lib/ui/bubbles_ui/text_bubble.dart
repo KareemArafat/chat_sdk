@@ -8,6 +8,13 @@ class TextBubbleL extends StatelessWidget {
   final MessageModel o;
   @override
   Widget build(BuildContext context) {
+    String timeFn() {
+      String isoString = o.time!;
+      DateTime dateTime = DateTime.parse(isoString);
+      String formattedTime = DateFormat('hh:mm a').format(dateTime);
+      return formattedTime;
+    }
+
     return Align(
       alignment: Alignment.bottomLeft,
       child: IntrinsicWidth(
@@ -33,7 +40,7 @@ class TextBubbleL extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  DateFormat('hh:mm a').format(DateTime.now()),
+                  timeFn(),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,
@@ -48,30 +55,52 @@ class TextBubbleL extends StatelessWidget {
   }
 }
 
-class ChatBubbleR extends StatelessWidget {
-  const ChatBubbleR({super.key, required this.o});
+class TextBubbleR extends StatelessWidget {
+  const TextBubbleR({super.key, required this.o});
   final MessageModel o;
-
   @override
   Widget build(BuildContext context) {
+    String timeFn() {
+      String isoString = o.time!;
+      DateTime dateTime = DateTime.parse(isoString);
+      String formattedTime = DateFormat('hh:mm a').format(dateTime);
+      return formattedTime;
+    }
+
     return Align(
       alignment: Alignment.bottomRight,
       child: IntrinsicWidth(
         child: Container(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           margin: const EdgeInsets.all(10),
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
                 bottomLeft: Radius.circular(30)),
-            color: Color.fromARGB(250, 186, 172, 200),
+            color: Color.fromARGB(255, 89, 87, 87),
           ),
-          child: Center(
-              child: Text(
-            o.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 17),
-          )),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 4, right: 50),
+                child: Text(
+                  o.text!,
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  timeFn(),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
 import 'package:chat_sdk/cubits/lists_cubit/lists_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/api/get_file.dart';
 import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
@@ -12,6 +11,7 @@ import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.token});
@@ -27,13 +27,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     socketService.connect(widget.token);
     getRoomsCards();
-    super.initState();
   }
 
   void getRoomsCards() async {
     BlocProvider.of<ListsCubit>(context).getHomeList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    socketService.dispose();
   }
 
   @override
@@ -58,14 +64,16 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
+              onPressed: () async {
+                socketService.socket.disconnect();
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoginPage(),
                     ));
-                socketService.dispose();
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                await ShardpModel().setLoginValue(flag: false);
               },
               icon: const Icon(Icons.arrow_back)),
           iconTheme: const IconThemeData(color: Colors.white),
@@ -87,18 +95,15 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             IconButton(
-              icon: const Icon(Icons
-                  .more_vert), /////////////////////////////////////////////
-              onPressed: () {
-                GetFile().getFileFn(path: '1744673738723-db53c8cb.wav', token: widget.token);
-              },
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {},
               color: Colors.white,
             ),
           ],
           title: FutureBuilder(
             future: ShardpModel().getFullName(),
             builder: (context, snapshot) {
-              return Text(snapshot.data ?? 'No Data',
+              return Text(snapshot.data ?? '',
                   style: const TextStyle(color: Colors.white, fontSize: 25));
             },
           ),
@@ -108,6 +113,19 @@ class _HomePageState extends State<HomePage> {
             if (state is ListsSuccess) {
               rooms = state.rooms!;
             }
+            // if (state is RoomFailure) {
+            //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //     content: Text('Error .. Room not created'),
+            //     backgroundColor: Colors.red,
+            //   ));
+            // }
+            // if (state is RoomSuccess) {
+            //   rooms = state.rooms!;
+            //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //     content: Text('Room created'),
+            //     backgroundColor: Colors.green,
+            //   ));
+            // }
           },
           builder: (context, state) {
             if (state is ListsLoading) {

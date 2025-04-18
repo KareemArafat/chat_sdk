@@ -23,9 +23,11 @@ class ChatPage extends StatefulWidget {
     this.id,
     required this.roomId,
     required this.socketService,
+    required this.name,
   });
   final String? id;
   final String roomId;
+  final String name;
   final SocketService socketService;
 
   @override
@@ -42,6 +44,14 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<ChatCubit>(context)
+        .receiveMess(socket: widget.socketService.socket);
+  }
+
+  @override
+  void dispose() {
+    widget.socketService.socket.off('message');
+    super.dispose();
   }
 
   @override
@@ -55,13 +65,13 @@ class _ChatPageState extends State<ChatPage> {
             iconTheme: const IconThemeData(color: Colors.white),
             toolbarHeight: 65,
             backgroundColor: baseAppBarColor,
-            title: const ChatAppBar()),
+            title: ChatAppBar(name: widget.name)),
         body: Column(
           children: [
             BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
                 if (state is ChatSuccess) {
-                  messageList = state.messagesList;
+                  messageList.add(state.mess);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     scrollController.animateTo(
                         scrollController.position.maxScrollExtent,
@@ -83,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
                         return TextBubbleL(o: messageList[index]);
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].text != null) {
-                        return ChatBubbleR(o: messageList[index]);
+                        return TextBubbleR(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'image') {
                         return ImageBubbleL(o: messageList[index]);
@@ -124,7 +134,8 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(2),
               child: ChatBottomField(
-                emojiFn: () {},
+                //         emojiFn: () {    BlocProvider.of<ChatCubit>(context)
+                // .receiveMess(socket: widget.socketService.socket);},
                 recordObj: recordService,
                 socketObj: widget.socketService.socket,
                 roomId: widget.roomId,

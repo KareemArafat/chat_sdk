@@ -9,13 +9,16 @@ class SocketService {
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
-      'auth': {'token': token}
+      'auth': {'token': token},
     });
     socket.connect();
-    socket.onConnect((_) => log('server is connected ^_^'));
-    socket.onDisconnect((_) => log('server is disconnected >_<'));
+    socket.off('connect');
+    socket.off('disconnect');
+    socket.off('error');
+    socket.onConnect((data) => log('server is connected ^_^'));
+    socket.onDisconnect((data) => log('server is disconnected >_<'));
     socket.onError((error) => log('Socket error client side: $error'));
-    socket.on('error', (error) => log('Socket error server side: $error'));
+     
   }
 
   void dispose() {

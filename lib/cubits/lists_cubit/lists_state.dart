@@ -12,3 +12,9 @@ class ListsSuccess extends ListsState {
   List<MessageModel>? messages;
   ListsSuccess({this.rooms, this.messages});
 }
+
+class RoomSuccess extends ListsState {
+  List<RoomModel>? rooms;
+  RoomSuccess({required List<RoomModel> room});
+}
+class RoomFailure extends ListsState {}
