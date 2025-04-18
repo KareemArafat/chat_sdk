@@ -43,7 +43,7 @@ class ChatCubit extends Cubit<ChatState> {
       }),
     );
     socket.emit('uploadFiles', message.toJson());
-  //  emit(ChatSuccess(mess: message));
+    //  emit(ChatSuccess(mess: message));
   }
 
   sendVideo(
@@ -150,7 +150,26 @@ class ChatCubit extends Cubit<ChatState> {
     socket.on('message', (data) {
       //  MessageModel messageModel = MessageModel.fromJson(data);
       //  if (id != messageModel.senderId) {
-      print('yes $data');
+      print('yessssss ${data['senderId']}');
+      //    print(data['type']);
+      // print(data['roomId']);
+      // print(data['createdAt']);
+      // print(data['text']);
+      // // print(data['senderId']);
+      // // print(data['senderId']);
+      // // MessageModel m = MessageModel(
+      // //   senderId: data['senderId'],
+      // //   roomId: data['roomId'],
+      // //   file: MediaFile(
+      // //     path : data['path'],
+      // //     data['name'],
+      // //     data['type'],
+      // //   ),
+      // // );
+
+      MessageModel m = MessageModel.fromJson(data);
+      print('sssssssssssss ${m.time}');
+
       emit(ChatSuccess(mess: MessageModel.fromJson(data)));
       //  }
     });

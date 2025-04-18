@@ -88,13 +88,7 @@ class _ChatPageState extends State<ChatPage> {
                     controller: scrollController,
                     itemCount: messageList.length,
                     itemBuilder: (context, index) {
-                      if (messageList[index].senderId == widget.id &&
-                          messageList[index].text != null) {
-                        return TextBubbleL(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].text != null) {
-                        return TextBubbleR(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
+                     if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'image') {
                         return ImageBubbleL(o: messageList[index]);
                       } else if (messageList[index].senderId != widget.id &&

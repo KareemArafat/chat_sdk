@@ -19,7 +19,7 @@ class MessageModel {
 
   factory MessageModel.fromJson(jsonData) {
     return MessageModel(
-      senderId: jsonData['sender'],
+      senderId: jsonData['senderId'],
       roomId: jsonData['roomId'],
       time: jsonData['createdAt'],
       text: jsonData['text'],
@@ -32,14 +32,14 @@ class MessageModel {
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
         'roomId': roomId,
-        'time': time,
+        'createdAt': time,
         'text': text,
         'file': file?.toJson(),
       };
 }
 
 class MediaFile {
-  Uint8List dataSend;
+  Uint8List? dataSend;
   String? path;
   String? name;
   String? type;
@@ -47,18 +47,21 @@ class MediaFile {
   FilePickerResult? soundData;
   String? recordData;
 
-  MediaFile(this.dataSend, this.path, this.name, this.type, this.videoData,
-      this.soundData, this.recordData);
+  MediaFile(
+      {this.dataSend,
+      this.path,
+      this.name,
+      this.type,
+      this.videoData,
+      this.soundData,
+      this.recordData});
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(
-      jsonData['data'],
-      jsonData['path'],
-      jsonData['name'],
-      jsonData['type'],
-      jsonData['videoData'],
-      jsonData['soundData'],
-      jsonData['recordData'],
+      dataSend: jsonData['data'],
+      path: jsonData['path'],
+      name: jsonData['name'],
+      type: jsonData['type'],
     );
   }
 
