@@ -1,5 +1,8 @@
+import 'dart:developer';
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/services/api/get_file.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,18 +31,7 @@ class ImageBubbleL extends StatelessWidget {
             mainAxisSize: MainAxisSize
                 .min, // Makes column take as little vertical space as needed
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: o.file!.path == null
-                    ? Image.memory(
-                        o.file!.dataSend!,
-                        fit: BoxFit.contain,
-                      )
-                    : Image.asset(
-                        'assets/images/image.jpg',
-                        fit: BoxFit.contain,
-                      ),
-              ),
+              ImageView(o: o),
               const SizedBox(height: 4),
               Align(
                 alignment: Alignment.bottomRight,
@@ -59,6 +51,73 @@ class ImageBubbleL extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ImageView extends StatefulWidget {
+  const ImageView({
+    super.key,
+    required this.o,
+  });
+
+  final MessageModel o;
+
+  @override
+  State<ImageView> createState() => _ImageViewState();
+}
+
+class _ImageViewState extends State<ImageView> {
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: widget.o.file!.path == null
+          ? Image.memory(
+              widget.o.file!.dataSend!,
+              fit: BoxFit.contain,
+            )
+          : Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Image.asset(
+                  'assets/images/image.jpg',
+                  fit: BoxFit.contain,
+                ),
+                isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.only(right: 5, bottom: 6),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          strokeAlign: -5,
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: () async {
+                          isLoading = true;
+                          setState(() {});
+                          try {
+                            String token = await ShardpModel().getToken();
+                            widget.o.file!.dataSend = await LoadFiles()
+                                .getFileFn(
+                                    path: widget.o.file!.path!, token: token);
+                            widget.o.file!.path = null;
+                            isLoading = false;
+                            setState(() {});
+                          } catch (e) {
+                            log('error .. ${e.toString()}');
+                            isLoading = false;
+                            setState(() {});
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.download_sharp,
+                          size: 30,
+                        ))
+              ],
+            ),
     );
   }
 }

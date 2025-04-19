@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:chat_sdk/consts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -27,10 +28,22 @@ class SocketService {
     log('Socket connection closed ✔✔');
   }
 
-  void createRoom({required List<String> members, String? roomName}) {
-    socket.emit('createRoom',
-        {'type': 'direct', 'roomName': roomName, 'members': members});
-  }
+Future<bool> createRoom({required List<String> members, String? roomName}) async {
+  final completer = Completer<bool>();
+  socket.emitWithAck(
+    'createRoom',
+    {'type': 'direct', 'roomName': roomName, 'members': members},
+    ack: (response) {
+      if (response != null && response['success'] == true) {
+        completer.complete(true);
+      } else {
+        completer.complete(false);
+      }
+    },
+  );
+  return completer.future;
+}
+
 
   void joinRoom(String roomId) {
     socket.emit('joinRoom', {'roomId': roomId});

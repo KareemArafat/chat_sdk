@@ -31,19 +31,18 @@ class ChatCubit extends Cubit<ChatState> {
     final returnedImage = await ImagePicker().pickImage(source: source);
     if (returnedImage == null) return;
     File imgFile = File(returnedImage.path);
-    List<int> imageBytes = imgFile.readAsBytesSync();
+    final imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-      senderId: id,
-      roomId: roomId,
-      file: MediaFile.fromJson({
-        'data': imageBytes,
-        'name': returnedImage.name,
-        'type': 'image',
-      }),
-    );
+        senderId: id,
+        roomId: roomId,
+        file: MediaFile(
+          dataSend: imageBytes,
+          type: 'image',
+          name: returnedImage.name,
+        ));
     socket.emit('uploadFiles', message.toJson());
-    //  emit(ChatSuccess(mess: message));
+    emit(ChatSuccess(mess: message));
   }
 
   sendVideo(
@@ -53,19 +52,16 @@ class ChatCubit extends Cubit<ChatState> {
     final returnedVideo = await ImagePicker().pickVideo(source: source);
     if (returnedVideo == null) return;
     File videoFile = File(returnedVideo.path);
-    List<int> videoBytes = videoFile.readAsBytesSync();
+    final videoBytes = videoFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
     final message = MessageModel(
-      senderId: id,
-      roomId: roomId,
-      //   time: DateTime.now(),
-      file: MediaFile.fromJson({
-        'data': videoBytes,
-        'name': returnedVideo.name,
-        'type': 'video',
-        'videoData': videoFile
-      }),
-    );
+        senderId: id,
+        roomId: roomId,
+        file: MediaFile(
+          dataSend: videoBytes,
+          name: returnedVideo.name,
+          type: 'video',
+        ));
     socket.emit('uploadFiles', message.toJson());
     emit(ChatSuccess(mess: message));
   }
@@ -146,30 +142,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   receiveMess({required Socket socket}) async {
-    String id = await ShardpModel().getSenderId();
     socket.on('message', (data) {
-      //  MessageModel messageModel = MessageModel.fromJson(data);
-      //  if (id != messageModel.senderId) {
-      print('yessssss ${data['senderId']}');
-      //    print(data['type']);
-      // print(data['roomId']);
-      // print(data['createdAt']);
-      // print(data['text']);
-      // // print(data['senderId']);
-      // // print(data['senderId']);
-      // // MessageModel m = MessageModel(
-      // //   senderId: data['senderId'],
-      // //   roomId: data['roomId'],
-      // //   file: MediaFile(
-      // //     path : data['path'],
-      // //     data['name'],
-      // //     data['type'],
-      // //   ),
-      // // );
-
-      MessageModel m = MessageModel.fromJson(data);
-      print('sssssssssssss ${m.time}');
-
       emit(ChatSuccess(mess: MessageModel.fromJson(data)));
       //  }
     });

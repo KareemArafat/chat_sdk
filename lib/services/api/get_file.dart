@@ -1,30 +1,14 @@
 import 'dart:developer';
+import 'dart:typed_data';
 import 'package:chat_sdk/consts.dart';
-import 'package:http/http.dart' as http;
+import 'package:chat_sdk/services/api/api.dart';
 
-class GetFile {
-  Future<dynamic> get({required String url, String? token}) async {
-    Map<String, String> headers = {};
-
-    if (token != null) {
-      headers.addAll({'Authorization': 'Bearer $token'});
-    }
-
-    http.Response response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return response.bodyBytes;
-    } else {
-      throw Exception(
-          'there is a problem with status code ${response.statusCode}');
-    }
-  }
-
-  Future<List<int>?> getFileFn(
+class LoadFiles {
+  Future<Uint8List?> getFileFn(
       {required String path, required String token}) async {
     try {
-      final dataList =
-          await get(url: "$baseUrl/download?path=$path&&token=$token");
+      final dataList = await Api()
+          .getFile(url: "$baseUrl/download?path=$path&&token=$token");
       return dataList;
     } catch (e) {
       log(e.toString());

@@ -75,7 +75,7 @@ class _ChatPageState extends State<ChatPage> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     scrollController.animateTo(
                         scrollController.position.maxScrollExtent,
-                        duration: const Duration(seconds: 1),
+                        duration: const Duration(milliseconds: 40),
                         curve: Curves.easeIn);
                   });
                 }
