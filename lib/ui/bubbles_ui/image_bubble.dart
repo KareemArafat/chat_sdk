@@ -4,7 +4,6 @@ import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/api/get_file.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ImageBubbleL extends StatelessWidget {
   const ImageBubbleL({super.key, required this.o});
@@ -38,7 +37,7 @@ class ImageBubbleL extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: Text(
-                    DateFormat('hh:mm a').format(DateTime.now()),
+                    o.fileTime!,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,
@@ -83,7 +82,7 @@ class _ImageViewState extends State<ImageView> {
               alignment: Alignment.bottomRight,
               children: [
                 Image.asset(
-                  'assets/images/image.jpg',
+                  'assets/images/photo.jpg',
                   fit: BoxFit.contain,
                 ),
                 isLoading
@@ -122,60 +121,50 @@ class _ImageViewState extends State<ImageView> {
   }
 }
 
+class ImageBubbleR extends StatelessWidget {
+  const ImageBubbleR({super.key, required this.o});
+  final MessageModel o;
 
-// class ImageBubbleR extends StatelessWidget {
-//   const ImageBubbleR({super.key, required this.o});
-//   final MessageModel o;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Align(
-//       alignment: Alignment.centerRight,
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-//         child: Container(
-//             height: MediaQuery.of(context).size.height / 2.74,
-//             width: MediaQuery.of(context).size.width / 2,
-//             decoration: const BoxDecoration(
-//               borderRadius: BorderRadius.only(
-//                   topLeft: Radius.circular(15),
-//                   topRight: Radius.circular(15),
-//                   bottomLeft: Radius.circular(15)),
-//               color: Color.fromARGB(255, 89, 87, 87),
-//             ),
-//             child: Column(
-//               children: [
-//                 ClipRRect(
-//                   borderRadius: BorderRadius.circular(15),
-//                   child: Card(
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(15),
-//                     ),
-//                     clipBehavior: Clip.hardEdge,
-//                     child: SizedBox(
-//                       child: Image.memory(
-//                         o.file!.dataSend,
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 Align(
-//                   alignment: Alignment.bottomRight,
-//                   child: Padding(
-//                     padding: const EdgeInsets.only(right: 10),
-//                     child: Text(
-//                       DateFormat('hh:mm a').format(DateTime.now()),
-//                       style: const TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 11,
-//                           fontWeight: FontWeight.bold),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             )),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          padding: const EdgeInsets.all(5),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            color: baseAppBarColor,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ImageView(o: o),
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Text(
+                    o.fileTime!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

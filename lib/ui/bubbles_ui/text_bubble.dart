@@ -9,10 +9,15 @@ class TextBubbleL extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String timeFn() {
-      String isoString = o.time!;
-      DateTime dateTime = DateTime.parse(isoString);
-      String formattedTime = DateFormat('hh:mm a').format(dateTime);
-      return formattedTime;
+      if (o.time == null) {
+        //  String isoString = DateTime.now();
+        //   DateTime dateTime = DateTime.parse(isoString);
+        String formattedTime = DateFormat('hh:mm a').format(DateTime.now());
+        o.time = formattedTime;
+        return o.time!;
+      } else {
+        return o.time!;
+      }
     }
 
     return Align(
@@ -61,10 +66,15 @@ class TextBubbleR extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String timeFn() {
-      String isoString = o.time!;
-      DateTime dateTime = DateTime.parse(isoString);
-      String formattedTime = DateFormat('hh:mm a').format(dateTime);
-      return formattedTime;
+      if (o.time!.length > 10) {
+        String isoString = o.time!;
+        DateTime dateTime = DateTime.parse(isoString);
+        String formattedTime = DateFormat('hh:mm a').format(dateTime);
+        o.time = formattedTime;
+        return o.time!;
+      } else {
+        return o.time!;
+      }
     }
 
     return Align(
@@ -78,7 +88,7 @@ class TextBubbleR extends StatelessWidget {
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
                 bottomLeft: Radius.circular(30)),
-            color: Color.fromARGB(255, 89, 87, 87),
+            color: baseAppBarColor,
           ),
           child: Column(
             children: [

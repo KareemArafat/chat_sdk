@@ -65,7 +65,6 @@ class _HomePageState extends State<HomePage> {
           automaticallyImplyLeading: false,
           leading: IconButton(
               onPressed: () async {
-                socketService.socket.disconnect();
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -74,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
                 await ShardpModel().setLoginValue(flag: false);
+            
               },
               icon: const Icon(Icons.arrow_back)),
           iconTheme: const IconThemeData(color: Colors.white),
@@ -113,19 +113,19 @@ class _HomePageState extends State<HomePage> {
             if (state is ListsSuccess) {
               rooms = state.rooms!;
             }
-            // if (state is RoomFailure) {
-            //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //     content: Text('Error .. Room not created'),
-            //     backgroundColor: Colors.red,
-            //   ));
-            // }
-            // if (state is RoomSuccess) {
-            //   rooms = state.rooms!;
-            //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //     content: Text('Room created'),
-            //     backgroundColor: Colors.green,
-            //   ));
-            // }
+            if (state is RoomFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Error .. Room not created'),
+                backgroundColor: Colors.red,
+              ));
+            }
+            if (state is RoomSuccess) {
+              rooms = state.rooms!;
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Room created'),
+                backgroundColor: Colors.green,
+              ));
+            }
           },
           builder: (context, state) {
             if (state is ListsLoading) {

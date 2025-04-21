@@ -6,7 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class SocketService {
   late IO.Socket socket;
 
-  void connect(String token) {
+  void connect(String token) async {
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -15,11 +15,9 @@ class SocketService {
     socket.connect();
     socket.off('connect');
     socket.off('disconnect');
-    socket.off('error');
     socket.onConnect((data) => log('server is connected ^_^'));
     socket.onDisconnect((data) => log('server is disconnected >_<'));
     socket.onError((error) => log('Socket error client side: $error'));
-     
   }
 
   void dispose() {
@@ -28,22 +26,22 @@ class SocketService {
     log('Socket connection closed ✔✔');
   }
 
-Future<bool> createRoom({required List<String> members, String? roomName}) async {
-  final completer = Completer<bool>();
-  socket.emitWithAck(
-    'createRoom',
-    {'type': 'direct', 'roomName': roomName, 'members': members},
-    ack: (response) {
-      if (response != null && response['success'] == true) {
-        completer.complete(true);
-      } else {
-        completer.complete(false);
-      }
-    },
-  );
-  return completer.future;
-}
-
+  Future<bool> createRoom(
+      {required List<String> members, String? roomName}) async {
+    final completer = Completer<bool>();
+    socket.emitWithAck(
+      'createRoom',
+      {'type': 'direct', 'roomName': roomName, 'members': members},
+      ack: (response) {
+        if (response != null && response['status'] == 'success') {
+          completer.complete(true);
+        } else {
+          completer.complete(false);
+        }
+      },
+    );
+    return completer.future;
+  }
 
   void joinRoom(String roomId) {
     socket.emit('joinRoom', {'roomId': roomId});

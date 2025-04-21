@@ -15,6 +15,7 @@ class ListsSuccess extends ListsState {
 
 class RoomSuccess extends ListsState {
   List<RoomModel>? rooms;
-  RoomSuccess({required List<RoomModel> room});
+  RoomSuccess({this.rooms});
 }
+
 class RoomFailure extends ListsState {}

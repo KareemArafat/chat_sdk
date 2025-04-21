@@ -31,17 +31,9 @@ void addChat(BuildContext context, SocketService socketService) {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                    bool cc = await socketService.createRoom(members: [user]);
-
-                      if (cc) {
-                        print('yesss');
-                        Navigator.of(context).pop();
-                      } else {
-                        print('filddddddddddddddddddddd');
-                      }
-
-                      //  BlocProvider.of<ListsCubit>(context).addRoom(socketService: socketService,user: user);
-                      //
+                      Navigator.of(context).pop();
+                      BlocProvider.of<ListsCubit>(context)
+                          .addRoom(socketService: socketService, user: user);
                     },
                     child: const Text(
                       'Create Chat',

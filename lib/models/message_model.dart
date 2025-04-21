@@ -8,6 +8,7 @@ class MessageModel {
   String? time;
   String? text;
   MediaFile? file;
+  String? fileTime;
 
   MessageModel({
     required this.senderId,
@@ -15,26 +16,29 @@ class MessageModel {
     this.time,
     this.text,
     this.file,
+    this.fileTime,
   });
 
   factory MessageModel.fromJson(jsonData) {
     return MessageModel(
-      senderId: jsonData['senderId'],
+      senderId: jsonData['sender'],
       roomId: jsonData['roomId'],
       time: jsonData['createdAt'],
       text: jsonData['text'],
       file: jsonData['file'] != null
           ? MediaFile.fromJson(jsonData['file'])
           : null,
+      fileTime: jsonData['time'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'senderId': senderId,
+        'sender': senderId,
         'roomId': roomId,
         'createdAt': time,
-        'text': text,
+        'text' : text,
         'file': file?.toJson(),
+        'time': fileTime,
       };
 }
 

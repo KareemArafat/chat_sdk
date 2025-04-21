@@ -88,24 +88,32 @@ class _ChatPageState extends State<ChatPage> {
                     controller: scrollController,
                     itemCount: messageList.length,
                     itemBuilder: (context, index) {
-                     if (messageList[index].senderId == widget.id &&
+                      if (messageList[index].senderId == widget.id &&
+                          messageList[index].file?.dataSend == null) {
+                        return TextBubbleL(o: messageList[index]);
+                      } else if (messageList[index].senderId != widget.id &&
+                          messageList[index].file?.dataSend == null) {
+                        return TextBubbleR(o: messageList[index]);
+                      } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'image') {
                         return ImageBubbleL(o: messageList[index]);
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'image') {
-                        return ImageBubbleL(o: messageList[index]);
+                        return ImageBubbleR(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'video') {
-                        return VideoBubble(o: messageList[index]);
+                        return VideoBubbleL(o: messageList[index]);
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'video') {
-                        return VideoBubble(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
+                        return VideoBubbleR(o: messageList[index]);
+                      } 
+                      else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'file') {
-                        return FileBubble(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
+                        return FileBubbleL(o: messageList[index]);
+                      } 
+                      else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'file') {
-                        return FileBubble(o: messageList[index]);
+                        return FileBubbleR(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'sound') {
                         return SoundBubble(o: messageList[index]);
@@ -114,10 +122,18 @@ class _ChatPageState extends State<ChatPage> {
                         return SoundBubble(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'record') {
-                        return RecordBubble(o: messageList[index]);
+                        return RecordBubble(
+                          o: messageList[index],
+                          alignment: Alignment.centerLeft,
+                          color: baseColor1,
+                        );
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'record') {
-                        return RecordBubble(o: messageList[index]);
+                        return RecordBubble(
+                          o: messageList[index],
+                          alignment: Alignment.centerRight,
+                          color: baseAppBarColor,
+                        );
                       }
                       return null;
                     },

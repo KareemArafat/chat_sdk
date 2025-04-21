@@ -1,14 +1,24 @@
 import 'dart:async';
-import 'package:chat_sdk/consts.dart';
+import 'dart:developer';
+import 'dart:io';
 import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/services/api/get_file.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
-import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class RecordBubble extends StatefulWidget {
   final MessageModel o;
+  final AlignmentGeometry alignment;
+  final Color color;
 
-  const RecordBubble({super.key, required this.o});
+  const RecordBubble({
+    super.key,
+    required this.o,
+    required this.alignment,
+    required this.color,
+  });
 
   @override
   AudioPlayerState createState() => AudioPlayerState();
@@ -50,24 +60,45 @@ class AudioPlayerState extends State<RecordBubble> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: widget.alignment,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
             decoration: BoxDecoration(
-              color: baseColor1,
+              color: widget.color,
               borderRadius: BorderRadius.circular(30),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            height: 55,
-            width: 220,
+            height: 60,
+            width: 230,
             child: Stack(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4),
                   child: Row(
                     children: <Widget>[
-                      playIcon(),
+                      widget.o.file!.path == null
+                          ? playIcon()
+                          : GestureDetector(
+                              onTap: () async {
+                                try {
+                                  String token = await ShardpModel().getToken();
+                                  widget.o.file!.dataSend = await LoadFiles()
+                                      .getFileFn(
+                                          path: widget.o.file!.path!,
+                                          token: token);
+                                  widget.o.file!.path = null;
+                                  setState(() {});
+                                } catch (e) {
+                                  log('error .. ${e.toString()}');
+                                }
+                              },
+                              child: const Icon(
+                                Icons.download_sharp,
+                                size: 30,
+                                color: Colors.grey,
+                              ),
+                            ),
                       sliderLine(),
                       const Icon(Icons.mic, color: Colors.white),
                     ],
@@ -76,12 +107,12 @@ class AudioPlayerState extends State<RecordBubble> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 15, bottom: 2),
+                    padding: const EdgeInsets.only(right: 13, bottom: 3),
                     child: Text(
-                      DateFormat('hh:mm a').format(DateTime.now()),
+                      widget.o.fileTime!,
                       style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 11,
+                          fontSize: 10.7,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -138,8 +169,10 @@ class AudioPlayerState extends State<RecordBubble> {
   }
 
   Future<void> play() async {
-    await audioPlayer.setSource(
-        ap.DeviceFileSource(widget.o.file!.recordData!)); // Preload file
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/temp_audio.mp3'); // or .wav, etc.
+    await file.writeAsBytes(widget.o.file!.dataSend! as List<int>, flush: true);
+    await audioPlayer.setSource(ap.DeviceFileSource(file.path)); // Preload file
     await audioPlayer.resume(); // Start playing
   }
 
