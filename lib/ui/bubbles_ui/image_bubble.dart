@@ -3,6 +3,7 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/api/get_file.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
 
 class ImageBubbleL extends StatelessWidget {
@@ -32,20 +33,7 @@ class ImageBubbleL extends StatelessWidget {
             children: [
               ImageView(o: o),
               const SizedBox(height: 4),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: Text(
-                    o.fileTime!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+              TimeWidget(time: o.fileTime),
             ],
           ),
         ),
@@ -147,20 +135,7 @@ class ImageBubbleR extends StatelessWidget {
             children: [
               ImageView(o: o),
               const SizedBox(height: 4),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: Text(
-                    o.fileTime!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+              TimeWidget(time: o.fileTime),
             ],
           ),
         ),

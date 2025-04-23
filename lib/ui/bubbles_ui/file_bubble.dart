@@ -4,8 +4,8 @@ import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/api/get_file.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -62,20 +62,7 @@ class FileBubbleL extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Text(
-                      DateFormat('hh:mm a').format(DateTime.now()),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                const TimeWidget(),
               ],
             )),
       ),
@@ -182,20 +169,7 @@ class _FileBubbleRState extends State<FileBubbleR> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Text(
-                      DateFormat('hh:mm a').format(DateTime.now()),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                const TimeWidget(),
               ],
             )),
       ),

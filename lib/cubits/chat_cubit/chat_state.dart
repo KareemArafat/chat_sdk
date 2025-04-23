@@ -5,6 +5,6 @@ abstract class ChatState {}
 final class ChatInitial extends ChatState {}
 
 final class ChatSuccess extends ChatState {
-   MessageModel mess ;
+  final MessageModel mess;
   ChatSuccess({required this.mess});
 }

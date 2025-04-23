@@ -18,9 +18,7 @@ class RecordService {
   }
 
   Future<void> _initializeRecorder() async {
-    if (_recorder == null) {
-      _recorder = FlutterSoundRecorder();
-    }
+    _recorder ??= FlutterSoundRecorder();
 
     var status = await Permission.microphone.request();
     if (!status.isGranted) {

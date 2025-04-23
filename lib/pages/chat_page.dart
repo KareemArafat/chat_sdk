@@ -3,7 +3,6 @@ import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/ui/bubbles_ui/record_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
-import 'package:chat_sdk/ui/custom_ui/chat_app_bar.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/socket/recoding.dart';
@@ -50,8 +49,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    widget.socketService.socket.off('message');
     super.dispose();
+    widget.socketService.socket.off('message');
   }
 
   @override
@@ -62,10 +61,35 @@ class _ChatPageState extends State<ChatPage> {
               Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover)),
       Scaffold(
         appBar: AppBar(
-            iconTheme: const IconThemeData(color: Colors.white),
-            toolbarHeight: 65,
-            backgroundColor: baseAppBarColor,
-            title: ChatAppBar(name: widget.name)),
+          iconTheme: const IconThemeData(color: Colors.white),
+          toolbarHeight: MediaQuery.of(context).size.height / 15,
+          backgroundColor: baseAppBarColor,
+          title: Row(
+            children: [
+              const Padding(
+                  padding: EdgeInsets.only(bottom: 6, right: 15),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage('assets/images/user_image.jpg'),
+                  )),
+              Text(widget.name,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.width * 0.055))
+            ],
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.call, color: Colors.white)),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.videocam, color: Colors.white)),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.more_vert, color: Colors.white)),
+          ],
+        ),
         body: Column(
           children: [
             BlocConsumer<ChatCubit, ChatState>(
@@ -106,12 +130,10 @@ class _ChatPageState extends State<ChatPage> {
                       } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'video') {
                         return VideoBubbleR(o: messageList[index]);
-                      } 
-                      else if (messageList[index].senderId == widget.id &&
+                      } else if (messageList[index].senderId == widget.id &&
                           messageList[index].file!.type == 'file') {
                         return FileBubbleL(o: messageList[index]);
-                      } 
-                      else if (messageList[index].senderId != widget.id &&
+                      } else if (messageList[index].senderId != widget.id &&
                           messageList[index].file!.type == 'file') {
                         return FileBubbleR(o: messageList[index]);
                       } else if (messageList[index].senderId == widget.id &&
@@ -144,8 +166,6 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.all(2),
               child: ChatBottomField(
-                //         emojiFn: () {    BlocProvider.of<ChatCubit>(context)
-                // .receiveMess(socket: widget.socketService.socket);},
                 recordObj: recordService,
                 socketObj: widget.socketService.socket,
                 roomId: widget.roomId,

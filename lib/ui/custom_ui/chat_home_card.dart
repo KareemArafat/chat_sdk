@@ -14,6 +14,7 @@ class ChatHomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     String timeFn() {
       if (room.lastMessage != null) {
         String isoString = room.lastMessage!.time;
@@ -34,7 +35,7 @@ class ChatHomeCard extends StatelessWidget {
           return room.lastMessage!.fileType!;
         }
       } else {
-        return '';
+        return 'No messages';
       }
     }
 
@@ -70,7 +71,7 @@ class ChatHomeCard extends StatelessWidget {
             title: FutureBuilder(
               future: nameFn(),
               builder: (context, snapshot) {
-               if (snapshot.hasData) {
+                if (snapshot.hasData) {
                   return Text(
                     snapshot.data!,
                     style: const TextStyle(
@@ -80,8 +81,7 @@ class ChatHomeCard extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return const Text('No users',
-                      style: TextStyle(color: Colors.grey));
+                  return const Text('');
                 }
               },
             ),

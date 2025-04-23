@@ -36,7 +36,7 @@ class MessageModel {
         'sender': senderId,
         'roomId': roomId,
         'createdAt': time,
-        'text' : text,
+        'text': text,
         'file': file?.toJson(),
         'time': fileTime,
       };
@@ -51,14 +51,12 @@ class MediaFile {
   FilePickerResult? soundData;
   String? recordData;
 
-  MediaFile(
-      {this.dataSend,
-      this.path,
-      this.name,
-      this.type,
-      this.videoData,
-      this.soundData,
-      this.recordData});
+  MediaFile({
+    this.dataSend,
+    this.path,
+    this.name,
+    this.type,
+  });
 
   factory MediaFile.fromJson(jsonData) {
     return MediaFile(

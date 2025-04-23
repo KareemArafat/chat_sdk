@@ -1,5 +1,6 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -42,16 +43,7 @@ class TextBubbleL extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  timeFn(),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
+              TimeWidget(time: timeFn()),
             ],
           ),
         ),
@@ -99,16 +91,7 @@ class TextBubbleR extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  timeFn(),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
+              TimeWidget(time: timeFn()),
             ],
           ),
         ),

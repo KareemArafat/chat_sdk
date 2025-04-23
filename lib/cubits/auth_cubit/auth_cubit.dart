@@ -5,9 +5,9 @@ import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
-  AuthCubit() : super(LoginInitial());
+  AuthCubit() : super(AuthInitial());
 
-  loginFn({required String email, required String password}) async {
+  void loginFn({required String email, required String password}) async {
     emit(LoginLoading());
     try {
       await LoginPost().loginPostFn(email: email, password: password);
@@ -19,7 +19,7 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
-  signFn(
+  void signFn(
       {required String firstName,
       required String lastName,
       required String email,
@@ -34,6 +34,18 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(SignSuccess());
     } catch (e) {
       emit(SignFailure(errorMessage: e.toString()));
+    }
+  }
+
+  void check() async {
+    bool loginValue = await ShardpModel().getLoginValue();
+    emit(CheckInitial());
+    if (loginValue) {
+      String token = await ShardpModel().getToken();
+
+      emit(CheckSuccess(token: token));
+    } else {
+      emit(CheckFailure(errorMess: 'shard error .. login value is false'));
     }
   }
 }

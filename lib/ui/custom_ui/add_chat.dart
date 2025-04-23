@@ -1,5 +1,5 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
+import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ void addChat(BuildContext context, SocketService socketService) {
                   ElevatedButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      BlocProvider.of<ListsCubit>(context)
+                      BlocProvider.of<RoomsCubit>(context)
                           .addRoom(socketService: socketService, user: user);
                     },
                     child: const Text(

@@ -1,5 +1,5 @@
-import 'package:chat_sdk/cubits/shard_cubit/shard_cubit.dart';
-import 'package:chat_sdk/cubits/shard_cubit/shard_state.dart';
+import 'package:chat_sdk/cubits/auth_cubit/auth_cubit.dart';
+import 'package:chat_sdk/cubits/auth_cubit/auth_states.dart';
 import 'package:chat_sdk/pages/home_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/services/shardP/app_loading_screen.dart';
@@ -17,12 +17,12 @@ class _ShardScreenState extends State<ShardScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ShardCubit>(context).check();
+    BlocProvider.of<AuthCubit>(context).check();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShardCubit, ShardState>(
+    return BlocBuilder<AuthCubit, AuthStates>(
       builder: (context, state) {
         if (state is CheckFailure) {
           return const LoginPage();

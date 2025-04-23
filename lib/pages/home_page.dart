@@ -1,6 +1,6 @@
 import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/cubits/lists_cubit/lists_cubit.dart';
-import 'package:chat_sdk/cubits/lists_cubit/lists_state.dart';
+import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
+import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/services/socket/socket.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getRoomsCards() async {
-    BlocProvider.of<ListsCubit>(context).getHomeList();
+    BlocProvider.of<RoomsCubit>(context).getRoomsList();
   }
 
   @override
@@ -73,11 +73,10 @@ class _HomePageState extends State<HomePage> {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
                 await ShardpModel().setLoginValue(flag: false);
-            
               },
               icon: const Icon(Icons.arrow_back)),
           iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: 65,
+          toolbarHeight: MediaQuery.of(context).size.height / 15,
           backgroundColor: baseAppBarColor,
           actions: [
             IconButton(
@@ -85,49 +84,63 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 addChat(context, socketService);
               },
-              color: Colors.white,
             ),
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
                 showSearch(context: context, delegate: SearchPage());
               },
-              color: Colors.white,
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),
               onPressed: () {},
-              color: Colors.white,
             ),
           ],
           title: FutureBuilder(
             future: ShardpModel().getFullName(),
             builder: (context, snapshot) {
               return Text(snapshot.data ?? '',
-                  style: const TextStyle(color: Colors.white, fontSize: 25));
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.width * 0.055));
             },
           ),
         ),
-        body: BlocConsumer<ListsCubit, ListsState>(
+        body: BlocConsumer<RoomsCubit, RoomsState>(
           listener: (context, state) {
             if (state is ListsSuccess) {
               rooms = state.rooms!;
             }
-            if (state is RoomFailure) {
+            if (state is CreateFailure) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Error .. Room not created'),
-                backgroundColor: Colors.red,
+                content: Text('Failed .. Room not created',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                backgroundColor: Color.fromARGB(255, 176, 12, 0),
+                duration: Duration(seconds: 1),
               ));
             }
-            if (state is RoomSuccess) {
+            if (state is CreateSuccess) {
               rooms = state.rooms!;
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Room created'),
-                backgroundColor: Colors.green,
+                content: Text('Room created Success',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                backgroundColor: Color.fromARGB(255, 0, 144, 5),
+                duration: Duration(seconds: 1),
               ));
             }
           },
           builder: (context, state) {
+            if (state is ListsFailure) {
+              return const Center(
+                child: Text(
+                  'Connection Error ..',
+                  style: TextStyle(
+                      color: Color.fromARGB(107, 255, 255, 255), fontSize: 18),
+                ),
+              );
+            }
             if (state is ListsLoading) {
               return const Align(
                 alignment: Alignment.topCenter,
