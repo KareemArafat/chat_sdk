@@ -14,7 +14,6 @@ class ChatHomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     String timeFn() {
       if (room.lastMessage != null) {
         String isoString = room.lastMessage!.time;
@@ -64,6 +63,7 @@ class ChatHomeCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
+            minTileHeight: MediaQuery.of(context).size.height / 13,
             leading: const CircleAvatar(
               radius: 30,
               backgroundImage: AssetImage('assets/images/user_image.jpg'),
