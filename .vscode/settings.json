@@ -3,6 +3,8 @@
         "firstname",
         "lastname",
         "prefs",
-        "Shardp"
+        "Shardp",
+        "Videocall",
+        "Voicecall"
     ]
 }

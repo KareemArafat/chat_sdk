@@ -1,6 +1,8 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
+import 'package:chat_sdk/pages/video_call_page.dart';
+import 'package:chat_sdk/pages/voice_call_page.dart';
 import 'package:chat_sdk/ui/bubbles_ui/record_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
@@ -80,10 +82,22 @@ class _ChatPageState extends State<ChatPage> {
           ),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VoiceCallPage(
+                                name: widget.name,
+                              )));
+                },
                 icon: const Icon(Icons.call, color: Colors.white)),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VideocallPage()));
+                },
                 icon: const Icon(Icons.videocam, color: Colors.white)),
             IconButton(
                 onPressed: () {},
