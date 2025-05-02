@@ -3,7 +3,6 @@ import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/services/socket/socket.dart';
-import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/login_page.dart';
@@ -39,76 +38,75 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    socketService.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: baseGroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ContactsPage(),
-              ));
-        },
-        shape: const CircleBorder(),
-        backgroundColor: baseColor1,
-        child: const Icon(
-          Icons.chat,
-          color: Colors.white,
-        ),
-      ),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            onPressed: () async {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ));
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
-              await ShardpModel().setLoginValue(flag: false);
-            },
-            icon: const Icon(Icons.arrow_back)),
-        iconTheme: const IconThemeData(color: Colors.white),
-        toolbarHeight: MediaQuery.of(context).size.height / 15,
-        backgroundColor: baseAppBarColor,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person_add_alt_1),
-            onPressed: () {
-              addChat(context, socketService);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: SearchPage());
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-        title: FutureBuilder(
-          future: ShardpModel().getFullName(),
-          builder: (context, snapshot) {
-            return Text(snapshot.data ?? '',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: MediaQuery.of(context).size.width * 0.055));
+        backgroundColor: baseGroundColor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ContactsPage(),
+                ));
           },
+          shape: const CircleBorder(),
+          backgroundColor: baseColor1,
+          child: const Icon(
+            Icons.chat,
+            color: Colors.white,
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 5, left: 8, right: 8),
-        child: BlocConsumer<RoomsCubit, RoomsState>(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () async {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ));
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                await ShardpModel().setLoginValue(flag: false);
+              },
+              icon: const Icon(Icons.arrow_back)),
+          iconTheme: const IconThemeData(color: Colors.white),
+          toolbarHeight: MediaQuery.of(context).size.height / 15,
+          backgroundColor: baseAppBarColor,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person_add_alt_1),
+              onPressed: () {
+                addChat(context, socketService);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: SearchPage());
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {},
+            ),
+          ],
+          title: FutureBuilder(
+            future: ShardpModel().getFullName(),
+            builder: (context, snapshot) {
+              return Text(snapshot.data ?? '',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.width * 0.055));
+            },
+          ),
+        ),
+        body: BlocConsumer<RoomsCubit, RoomsState>(
           listener: (context, state) {
             if (state is ListsSuccess) {
               rooms = state.rooms!;
@@ -147,7 +145,7 @@ class _HomePageState extends State<HomePage> {
               return const Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: EdgeInsets.all(16),
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                     color: baseColor1,
@@ -157,25 +155,18 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             }
-            return Column(
-              children: [
-                const AiCard(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: rooms.length,
-                    itemBuilder: (context, index) {
-                      return ChatHomeCard(
-                        room: rooms[index],
-                        socketService: socketService,
-                      );
-                    },
-                  ),
-                ),
-              ],
+            return ListView.builder(
+              padding:
+                  const EdgeInsets.only(top: 20, bottom: 5, left: 8, right: 8),
+              itemCount: rooms.length,
+              itemBuilder: (context, index) {
+                return ChatHomeCard(
+                  room: rooms[index],
+                  socketService: socketService,
+                );
+              },
             );
           },
-        ),
-      ),
-    );
+        ));
   }
 }
