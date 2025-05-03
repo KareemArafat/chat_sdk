@@ -21,7 +21,7 @@ class MessageModel {
 
   factory MessageModel.fromJson(jsonData) {
     return MessageModel(
-      senderId: jsonData['sender'],
+      senderId: jsonData['senderId'],
       roomId: jsonData['roomId'],
       time: jsonData['createdAt'],
       text: jsonData['text'],
@@ -33,7 +33,7 @@ class MessageModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'sender': senderId,
+        'senderId': senderId,
         'roomId': roomId,
         'createdAt': time,
         'text': text,

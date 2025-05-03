@@ -18,10 +18,14 @@ class RoomsCubit extends Cubit<RoomsState> {
   }
 
   void addRoom(
-      {required SocketService socketService, required String user}) async {
+      {required SocketService socketService,
+      required String type,
+      required List<String> user,
+      String? name}) async {
     emit(ListsLoading());
     try {
-      bool flag = await socketService.createRoom(members: [user]);
+      bool flag =
+          await socketService.createRoom(members: user, roomName: name,type: type);
       if (flag) {
         List<RoomModel> rooms = (await GetRooms().getRoomsFn())!;
         emit(CreateSuccess(rooms: rooms));

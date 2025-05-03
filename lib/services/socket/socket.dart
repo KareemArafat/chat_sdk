@@ -27,11 +27,13 @@ class SocketService {
   }
 
   Future<bool> createRoom(
-      {required List<String> members, String? roomName}) async {
+      {required String type,
+      required List<String> members,
+      String? roomName}) async {
     final completer = Completer<bool>();
     socket.emitWithAck(
       'createRoom',
-      {'type': 'direct', 'roomName': roomName, 'members': members},
+      {'type': type, 'roomName': roomName, 'members': members},
       ack: (response) {
         if (response != null && response['status'] == 'success') {
           completer.complete(true);

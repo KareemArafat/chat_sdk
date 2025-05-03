@@ -32,8 +32,10 @@ void addChat(BuildContext context, SocketService socketService) {
                   ElevatedButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      BlocProvider.of<RoomsCubit>(context)
-                          .addRoom(socketService: socketService, user: user);
+                      BlocProvider.of<RoomsCubit>(context).addRoom(
+                          socketService: socketService,
+                          user: [user],
+                          type: 'direct');
                     },
                     child: const Text(
                       'Create Chat',

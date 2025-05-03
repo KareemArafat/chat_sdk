@@ -14,7 +14,6 @@ class ChatHomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     String timeFn() {
       if (room.lastMessage != null) {
         String isoString = room.lastMessage!.time;
@@ -64,27 +63,39 @@ class ChatHomeCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: const CircleAvatar(
+            minTileHeight: MediaQuery.of(context).size.height / 13,
+            leading: CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage('assets/images/user_image.jpg'),
+              backgroundImage: room.users!.length > 2
+                  ? const AssetImage('assets/images/group.png')
+                  : const AssetImage('assets/images/user_image.jpg'),
             ),
-            title: FutureBuilder(
-              future: nameFn(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data!,
+            title: room.users!.length > 2
+                ? Text(
+                    room.name!,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
-                  );
-                } else {
-                  return const Text('');
-                }
-              },
-            ),
+                  )
+                : FutureBuilder(
+                    future: nameFn(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          snapshot.data!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else {
+                        return const Text('');
+                      }
+                    },
+                  ),
             subtitle: Text(
               messFn(),
               style: const TextStyle(

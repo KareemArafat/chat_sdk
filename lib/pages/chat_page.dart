@@ -16,7 +16,6 @@ import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
@@ -38,7 +37,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late RecordService recordService = RecordService();
   final TextEditingController textController = TextEditingController();
-  VideoPlayerController? videoController;
   final ScrollController scrollController = ScrollController();
   List<MessageModel> messageList = [];
 
@@ -57,15 +55,12 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Positioned.fill(
-          child:
-              Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover)),
-      Scaffold(
+    return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: MediaQuery.of(context).size.height / 15,
+          toolbarHeight: MediaQuery.of(context).size.height / 13,
           backgroundColor: baseAppBarColor,
+          leadingWidth: MediaQuery.of(context).size.width * 0.1,
           title: Row(
             children: [
               const Padding(
@@ -104,139 +99,144 @@ class _ChatPageState extends State<ChatPage> {
                 icon: const Icon(Icons.more_vert, color: Colors.white)),
           ],
         ),
-        body: Column(
+        body: Stack(
           children: [
-            BlocConsumer<ChatCubit, ChatState>(
-              listener: (context, state) {
-                if (state is ChatSuccess) {
-                  messageList.add(state.mess);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    scrollController.animateTo(
-                        scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 40),
-                        curve: Curves.easeIn);
-                  });
-                }
-              },
-              builder: (context, state) {
-                return Expanded(
-                  child: ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    controller: scrollController,
-                    itemCount: messageList.length,
-                    itemBuilder: (context, index) {
-                      if (messageList[index].senderId == widget.id &&
-                          messageList[index].file?.dataSend == null) {
-                        return TextBubbleL(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file?.dataSend == null) {
-                        return TextBubbleR(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
-                          messageList[index].file!.type == 'image') {
-                        return ImageBubbleL(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file!.type == 'image') {
-                        return ImageBubbleR(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
-                          messageList[index].file!.type == 'video') {
-                        return VideoBubbleL(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file!.type == 'video') {
-                        return VideoBubbleR(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
-                          messageList[index].file!.type == 'file') {
-                        return FileBubbleL(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file!.type == 'file') {
-                        return FileBubbleR(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
-                          messageList[index].file!.type == 'sound') {
-                        return SoundBubble(o: messageList[index]);
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file!.type == 'sound') {
-                        return SoundBubble(o: messageList[index]);
-                      } else if (messageList[index].senderId == widget.id &&
-                          messageList[index].file!.type == 'record') {
-                        return RecordBubble(
-                          o: messageList[index],
-                          alignment: Alignment.centerLeft,
-                          color: baseColor1,
-                        );
-                      } else if (messageList[index].senderId != widget.id &&
-                          messageList[index].file!.type == 'record') {
-                        return RecordBubble(
-                          o: messageList[index],
-                          alignment: Alignment.centerRight,
-                          color: baseAppBarColor,
-                        );
-                      }
-                      return null;
+            Positioned.fill(
+                child: Image.asset("assets/images/chat_image.jpg",
+                    fit: BoxFit.cover)),
+            Column(
+              children: [
+                BlocConsumer<ChatCubit, ChatState>(
+                  listener: (context, state) {
+                    if (state is ChatSuccess) {
+                      messageList.add(state.mess);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        scrollController.animateTo(
+                            scrollController.position.maxScrollExtent,
+                            duration: const Duration(milliseconds: 40),
+                            curve: Curves.easeIn);
+                      });
+                    }
+                  },
+                  builder: (context, state) {
+                    return Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        controller: scrollController,
+                        itemCount: messageList.length,
+                        itemBuilder: (context, index) {
+                          if (messageList[index].senderId == widget.id &&
+                              messageList[index].file?.dataSend == null) {
+                            return TextBubbleL(o: messageList[index]);
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file?.dataSend == null) {
+                            return TextBubbleR(o: messageList[index]);
+                          } else if (messageList[index].senderId == widget.id &&
+                              messageList[index].file!.type == 'image') {
+                            return ImageBubbleL(o: messageList[index]);
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file!.type == 'image') {
+                            return ImageBubbleR(o: messageList[index]);
+                          } else if (messageList[index].senderId == widget.id &&
+                              messageList[index].file!.type == 'video') {
+                            return VideoBubbleL(o: messageList[index]);
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file!.type == 'video') {
+                            return VideoBubbleR(o: messageList[index]);
+                          } else if (messageList[index].senderId == widget.id &&
+                              messageList[index].file!.type == 'file') {
+                            return FileBubbleL(o: messageList[index]);
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file!.type == 'file') {
+                            return FileBubbleR(o: messageList[index]);
+                          } else if (messageList[index].senderId == widget.id &&
+                              messageList[index].file!.type == 'sound') {
+                            return SoundBubble(o: messageList[index]);
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file!.type == 'sound') {
+                            return SoundBubble(o: messageList[index]);
+                          } else if (messageList[index].senderId == widget.id &&
+                              messageList[index].file!.type == 'record') {
+                            return RecordBubble(
+                              o: messageList[index],
+                              alignment: Alignment.centerLeft,
+                              color: baseColor1,
+                            );
+                          } else if (messageList[index].senderId != widget.id &&
+                              messageList[index].file!.type == 'record') {
+                            return RecordBubble(
+                              o: messageList[index],
+                              alignment: Alignment.centerRight,
+                              color: baseAppBarColor,
+                            );
+                          }
+                          return null;
+                        },
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: ChatBottomField(
+                    recordObj: recordService,
+                    socketObj: widget.socketService.socket,
+                    roomId: widget.roomId,
+                    soundFn: () {
+                      Navigator.pop(context);
+                      BlocProvider.of<ChatCubit>(context).sendSound(
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    fileFn: () {
+                      Navigator.pop(context);
+                      BlocProvider.of<ChatCubit>(context).sendFile(
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    videoRecordFn: () {
+                      Navigator.pop(context);
+                      BlocProvider.of<ChatCubit>(context).sendVideo(
+                          source: ImageSource.camera,
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    videoFn: () {
+                      Navigator.pop(context);
+                      BlocProvider.of<ChatCubit>(context).sendVideo(
+                          source: ImageSource.gallery,
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    imageFn: () {
+                      Navigator.pop(context);
+                      BlocProvider.of<ChatCubit>(context).sendImage(
+                          source: ImageSource.gallery,
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    cameraFn: () {
+                      Navigator.pop(context);
+
+                      BlocProvider.of<ChatCubit>(context).sendImage(
+                          source: ImageSource.camera,
+                          socket: widget.socketService.socket,
+                          roomId: widget.roomId);
+                    },
+                    controller: textController,
+                    submitted: (p0) {
+                      BlocProvider.of<ChatCubit>(context).sendMess(
+                          socket: widget.socketService.socket,
+                          mess: p0,
+                          roomId: widget.roomId);
+                      textController.clear();
                     },
                   ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(2),
-              child: ChatBottomField(
-                recordObj: recordService,
-                socketObj: widget.socketService.socket,
-                roomId: widget.roomId,
-                soundFn: () {
-                  Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context).sendSound(
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                fileFn: () {
-                  Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context).sendFile(
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                videoRecordFn: () {
-                  Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context).sendVideo(
-                      source: ImageSource.camera,
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                videoFn: () {
-                  Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context).sendVideo(
-                      source: ImageSource.gallery,
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                imageFn: () {
-                  Navigator.pop(context);
-                  BlocProvider.of<ChatCubit>(context).sendImage(
-                      source: ImageSource.gallery,
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                cameraFn: () {
-                  Navigator.pop(context);
-
-                  BlocProvider.of<ChatCubit>(context).sendImage(
-                      source: ImageSource.camera,
-                      socket: widget.socketService.socket,
-                      roomId: widget.roomId);
-                },
-                controller: textController,
-                submitted: (p0) {
-                  BlocProvider.of<ChatCubit>(context).sendMess(
-                      socket: widget.socketService.socket,
-                      mess: p0,
-                      roomId: widget.roomId);
-                  textController.clear();
-                },
-              ),
+                ),
+              ],
             ),
           ],
-        ),
-      ),
-    ]);
+        ));
   }
 }

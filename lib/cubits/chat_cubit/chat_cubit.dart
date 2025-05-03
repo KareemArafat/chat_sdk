@@ -139,7 +139,7 @@ class ChatCubit extends Cubit<ChatState> {
   void receiveMess({required Socket socket}) async {
     String id = await ShardpModel().getSenderId();
     socket.on('message', (data) {
-      if (id != data['sender']) {
+      if (id != data['senderId']) {
         emit(ChatSuccess(mess: MessageModel.fromJson(data)));
       }
     });
