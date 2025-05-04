@@ -1,4 +1,5 @@
 import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     socketService.connect(widget.token);
+    BlocProvider.of<ChatCubit>(context)
+        .receiveMess(socket: socketService.socket);
     getRoomsCards();
   }
 

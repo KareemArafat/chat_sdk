@@ -53,7 +53,7 @@ class _AiChatPageState extends State<AiChatPage> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    return TextBubbleL(o: message);
+                    return TextBubble(o: message,isMe: true,);
                   },
                 ),
               ),

@@ -9,26 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
-class FileBubbleL extends StatelessWidget {
-  const FileBubbleL({super.key, required this.o});
+class FileBubble extends StatelessWidget {
+  const FileBubble({super.key, required this.o, required this.isMe});
   final MessageModel o;
+  final bool isMe;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
             height: MediaQuery.of(context).size.height / 5.2,
             width: MediaQuery.of(context).size.width / 2.7,
             padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              color: baseColor1,
+            decoration: BoxDecoration(
+              color: isMe ? baseColor1 : baseAppBarColor,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-                bottomRight: Radius.circular(15),
+                topLeft: const Radius.circular(15),
+                topRight: const Radius.circular(15),
+                bottomRight: isMe ? const Radius.circular(30) : Radius.zero,
+                bottomLeft: isMe ? Radius.zero : const Radius.circular(30),
               ),
             ),
             child: Column(
@@ -47,9 +49,10 @@ class FileBubbleL extends StatelessWidget {
                       children: [
                         Image.asset(
                           'assets/images/file.jpg',
+                          //   height: MediaQuery.of(context).size.height / 6.19,
                         ),
                         const Padding(
-                          padding: EdgeInsets.only(top: 5, bottom: 6),
+                          padding: EdgeInsets.only(top: 0, bottom: 0),
                           child: Text('Open',
                               style: TextStyle(
                                 color: Colors.black,
@@ -70,108 +73,171 @@ class FileBubbleL extends StatelessWidget {
   }
 }
 
-class FileBubbleR extends StatefulWidget {
-  const FileBubbleR({super.key, required this.o});
+// class FileBubbleR extends StatefulWidget {
+//   const FileBubbleR({super.key, required this.o});
+//   final MessageModel o;
+
+//   @override
+//   State<FileBubbleR> createState() => _FileBubbleRState();
+// }
+
+// class _FileBubbleRState extends State<FileBubbleR> {
+//   String isLoading = 'false';
+//   @override
+//   Widget build(BuildContext context) {
+//     return Align(
+//       alignment: Alignment.centerRight,
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+//         child: Container(
+//             height: MediaQuery.of(context).size.height / 4.9,
+//             width: MediaQuery.of(context).size.width / 2.7,
+//             padding: const EdgeInsets.all(5),
+//             decoration: const BoxDecoration(
+//               color: baseAppBarColor,
+//               borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(15),
+//                 topRight: Radius.circular(15),
+//                 bottomLeft: Radius.circular(15),
+//               ),
+//             ),
+//             child: Column(
+//               children: [
+//                 ClipRRect(
+//                   borderRadius: BorderRadius.circular(12),
+//                   child: Stack(
+//                     alignment: Alignment.bottomRight,
+//                     children: [
+//                       GestureDetector(
+//                         onTap: () async {
+//                           if (widget.o.file!.path == null) {
+//                             final tempDir = await getTemporaryDirectory();
+//                             final file =
+//                                 File('${tempDir.path}/${widget.o.file!.name}');
+//                             await file.writeAsBytes(
+//                                 widget.o.file!.dataSend! as List<int>);
+//                             await OpenFilex.open(file.path);
+//                           } else {
+//                             log('not Loaded');
+//                           }
+//                         },
+//                         child: Image.asset(
+//                           'assets/images/file.jpg',
+//                         ),
+//                       ),
+//                       isLoading == 'true'
+//                           ? const Padding(
+//                               padding: EdgeInsets.only(right: 5, bottom: 6),
+//                               child: CircularProgressIndicator(
+//                                 strokeWidth: 3,
+//                                 strokeAlign: -5,
+//                               ),
+//                             )
+//                           : isLoading == 'false'
+//                               ? IconButton(
+//                                   onPressed: () async {
+//                                     isLoading = 'true';
+//                                     setState(() {});
+//                                     try {
+//                                       String token =
+//                                           await ShardpModel().getToken();
+//                                       widget.o.file!.dataSend =
+//                                           await LoadFiles().getFileFn(
+//                                               path: widget.o.file!.path!,
+//                                               token: token);
+//                                       widget.o.file!.path = null;
+//                                       isLoading = 'done';
+//                                       setState(() {});
+//                                     } catch (e) {
+//                                       log('error .. ${e.toString()}');
+//                                       isLoading = 'false';
+//                                     }
+//                                   },
+//                                   icon: const Icon(
+//                                     Icons.download_sharp,
+//                                     size: 30,
+//                                   ))
+//                               : const Padding(
+//                                   padding: EdgeInsets.only(top: 5, bottom: 6),
+//                                   child: Center(
+//                                     child: Text('Open',
+//                                         style: TextStyle(
+//                                           color: Colors.black,
+//                                           fontSize: 18,
+//                                           fontWeight: FontWeight.bold,
+//                                         )),
+//                                   ),
+//                                 ),
+//                     ],
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 const TimeWidget(),
+//               ],
+//             )),
+//       ),
+//     );
+//   }
+// }
+
+class FileView extends StatefulWidget {
+  const FileView({super.key, required this.o});
   final MessageModel o;
 
   @override
-  State<FileBubbleR> createState() => _FileBubbleRState();
+  State<FileView> createState() => _FileViewState();
 }
 
-class _FileBubbleRState extends State<FileBubbleR> {
-  String isLoading = 'false';
+class _FileViewState extends State<FileView> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Container(
-            height: MediaQuery.of(context).size.height / 4.9,
-            width: MediaQuery.of(context).size.width / 2.7,
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              color: baseAppBarColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-              ),
-            ),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (widget.o.file!.path == null) {
-                            final tempDir = await getTemporaryDirectory();
-                            final file =
-                                File('${tempDir.path}/${widget.o.file!.name}');
-                            await file.writeAsBytes(
-                                widget.o.file!.dataSend! as List<int>);
-                            await OpenFilex.open(file.path);
-                          } else {
-                            log('not Loaded');
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/file.jpg',
-                        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Stack(
+        children: [
+          Image.asset('assets/images/file.jpg'),
+          widget.o.file!.dataSend != null
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 6),
+                  child: Text('Open',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      )),
+                )
+              : isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.only(right: 5, bottom: 6),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        strokeAlign: -5,
                       ),
-                      isLoading == 'true'
-                          ? const Padding(
-                              padding: EdgeInsets.only(right: 5, bottom: 6),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3,
-                                strokeAlign: -5,
-                              ),
-                            )
-                          : isLoading == 'false'
-                              ? IconButton(
-                                  onPressed: () async {
-                                    isLoading = 'true';
-                                    setState(() {});
-                                    try {
-                                      String token =
-                                          await ShardpModel().getToken();
-                                      widget.o.file!.dataSend =
-                                          await LoadFiles().getFileFn(
-                                              path: widget.o.file!.path!,
-                                              token: token);
-                                      widget.o.file!.path = null;
-                                      isLoading = 'done';
-                                      setState(() {});
-                                    } catch (e) {
-                                      log('error .. ${e.toString()}');
-                                      isLoading = 'false';
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    Icons.download_sharp,
-                                    size: 30,
-                                  ))
-                              : const Padding(
-                                  padding: EdgeInsets.only(top: 5, bottom: 6),
-                                  child: Center(
-                                    child: Text('Open',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ),
-                                ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const TimeWidget(),
-              ],
-            )),
+                    )
+                  : IconButton(
+                      onPressed: () async {
+                        isLoading = true;
+                        setState(() {});
+                        try {
+                          String token = await ShardpModel().getToken();
+                          widget.o.file!.dataSend = await LoadFiles().getFileFn(
+                              path: widget.o.file!.path!, token: token);
+                          widget.o.file!.path = null;
+                          isLoading = false;
+                          setState(() {});
+                        } catch (e) {
+                          log('error .. ${e.toString()}');
+                          isLoading = false;
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.download_sharp,
+                        size: 30,
+                      ),
+                    ),
+        ],
       ),
     );
   }

@@ -6,30 +6,31 @@ import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
 
-class ImageBubbleL extends StatelessWidget {
-  const ImageBubbleL({super.key, required this.o});
+class ImageBubble extends StatelessWidget {
+  const ImageBubble({super.key, required this.o, required this.isMe});
   final MessageModel o;
+  final bool isMe;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.5,
           padding: const EdgeInsets.all(5),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+              topLeft: const Radius.circular(15),
+              topRight: const Radius.circular(15),
+              bottomRight: isMe ? const Radius.circular(30) : Radius.zero,
+              bottomLeft: isMe ? Radius.zero : const Radius.circular(30),
             ),
-            color: baseColor1,
+            color: isMe ? baseColor1 : baseAppBarColor,
           ),
           child: Column(
-            mainAxisSize: MainAxisSize
-                .min, // Makes column take as little vertical space as needed
+            mainAxisSize: MainAxisSize.min,
             children: [
               ImageView(o: o),
               const SizedBox(height: 4),
@@ -43,11 +44,7 @@ class ImageBubbleL extends StatelessWidget {
 }
 
 class ImageView extends StatefulWidget {
-  const ImageView({
-    super.key,
-    required this.o,
-  });
-
+  const ImageView({super.key, required this.o});
   final MessageModel o;
 
   @override
@@ -105,41 +102,6 @@ class _ImageViewState extends State<ImageView> {
                         ))
               ],
             ),
-    );
-  }
-}
-
-class ImageBubbleR extends StatelessWidget {
-  const ImageBubbleR({super.key, required this.o});
-  final MessageModel o;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          padding: const EdgeInsets.all(5),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
-            ),
-            color: baseAppBarColor,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ImageView(o: o),
-              const SizedBox(height: 4),
-              TimeWidget(time: o.fileTime),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

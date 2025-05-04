@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TimeWidget extends StatelessWidget {
-  const TimeWidget({
-    super.key,
-    this.time,
-  });
-
+  const TimeWidget({super.key, this.time});
   final String? time;
 
   @override
@@ -14,7 +10,7 @@ class TimeWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
-        padding: const EdgeInsets.only(right: 6),
+        padding: const EdgeInsets.only(right: 10),
         child: Text(
           time == null ? DateFormat('hh:mm a').format(DateTime.now()) : time!,
           style: const TextStyle(

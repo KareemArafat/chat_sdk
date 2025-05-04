@@ -1,13 +1,25 @@
 import 'dart:async';
-import 'package:audioplayers/audioplayers.dart' as ap;
+import 'dart:developer';
+import 'dart:io';
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/services/api/get_file.dart';
+import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart' as ap;
+import 'package:path_provider/path_provider.dart';
 
 class SoundBubble extends StatefulWidget {
+  const SoundBubble({
+    super.key,
+    required this.o,
+    required this.isMe,
+    required this.isVoice,
+  });
   final MessageModel o;
-
-  const SoundBubble({super.key, required this.o});
+  final bool isMe;
+  final bool isVoice;
 
   @override
   AudioPlayerState createState() => AudioPlayerState();
@@ -49,28 +61,56 @@ class AudioPlayerState extends State<SoundBubble> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: widget.isMe ? Alignment.bottomLeft : Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Container(
-          decoration: BoxDecoration(
-            color: baseColor1,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          height: 50,
-          width: 220,
-          child: Row(
-            children: <Widget>[
-              playIcon(),
-              sliderLine(),
-              const Icon(
-                Icons.music_note_rounded,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
+            decoration: BoxDecoration(
+              color: widget.isMe ? baseColor1 : baseAppBarColor,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+            height: 60,
+            width: 230,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: <Widget>[
+                      widget.o.file!.path == null
+                          ? playIcon()
+                          : GestureDetector(
+                              onTap: () async {
+                                try {
+                                  String token = await ShardpModel().getToken();
+                                  widget.o.file!.dataSend = await LoadFiles()
+                                      .getFileFn(
+                                          path: widget.o.file!.path!,
+                                          token: token);
+                                  widget.o.file!.path = null;
+                                  setState(() {});
+                                } catch (e) {
+                                  log('error .. ${e.toString()}');
+                                }
+                              },
+                              child: const Icon(
+                                Icons.download_sharp,
+                                size: 30,
+                                color: Colors.grey,
+                              ),
+                            ),
+                      sliderLine(),
+                      widget.isVoice
+                          ? const Icon(Icons.mic, color: Colors.white)
+                          : const Icon(Icons.music_note_rounded,
+                              color: Colors.white)
+                    ],
+                  ),
+                ),
+                const TimeWidget(),
+              ],
+            )),
       ),
     );
   }
@@ -101,9 +141,8 @@ class AudioPlayerState extends State<SoundBubble> {
         position != null &&
         position.inMilliseconds > 0 &&
         position.inMilliseconds < duration.inMilliseconds;
-
     return SizedBox(
-      width: 150,
+      width: 140,
       child: Slider(
         activeColor: Colors.white,
         inactiveColor: Colors.grey,
@@ -121,9 +160,11 @@ class AudioPlayerState extends State<SoundBubble> {
   }
 
   Future<void> play() async {
-    await audioPlayer.setSource(ap.DeviceFileSource(
-        widget.o.file!.soundData!.files.single.path!)); // Preload file
-    await audioPlayer.resume(); // Start playing
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/temp_audio.mp3');
+    await file.writeAsBytes(widget.o.file!.dataSend! as List<int>, flush: true);
+    await audioPlayer.setSource(ap.DeviceFileSource(file.path));
+    await audioPlayer.resume();
   }
 
   Future<void> pause() => audioPlayer.pause();

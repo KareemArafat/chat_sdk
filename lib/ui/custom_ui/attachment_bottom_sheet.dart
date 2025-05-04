@@ -13,10 +13,9 @@ attachmentSheet(
   return showModalBottomSheet(
     context: context,
     builder: (context) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        height: MediaQuery.of(context).size.height * 0.28,
-        width: MediaQuery.of(context).size.width * 0.7,
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.32,
+        width: MediaQuery.of(context).size.width * 0.85,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
