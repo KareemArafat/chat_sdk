@@ -16,44 +16,47 @@ class _AiChatPageState extends State<AiChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        toolbarHeight: MediaQuery.of(context).size.height / 13,
-        backgroundColor: baseAppBarColor,
-        title: Row(
-          children: [
-            const Padding(
-                padding: EdgeInsets.only(bottom: 6, right: 15),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('assets/images/ai_icon.jpg'),
-                )),
-            Text('Ai Chat',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: MediaQuery.of(context).size.width * 0.055))
-          ],
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert, color: Colors.white)),
-        ],
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-              child: Image.asset("assets/images/chat_image.jpg",
-                  fit: BoxFit.cover)),
-          Column(
+    return Stack(
+      children: [
+        Positioned.fill(
+            child:
+                Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover)),
+        Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            toolbarHeight: MediaQuery.of(context).size.height / 13,
+            backgroundColor: baseAppBarColor,
+            title: Row(
+              children: [
+                const Padding(
+                    padding: EdgeInsets.only(bottom: 6, right: 15),
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage('assets/images/ai_icon.jpg'),
+                    )),
+                Text('Ai Chat',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: MediaQuery.of(context).size.width * 0.055))
+              ],
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_vert, color: Colors.white)),
+            ],
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: ListView.builder(
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    return TextBubble(o: message,isMe: true,);
+                    return TextBubble(
+                      o: message,
+                      isMe: true,
+                    );
                   },
                 ),
               ),
@@ -62,8 +65,8 @@ class _AiChatPageState extends State<AiChatPage> {
               )
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

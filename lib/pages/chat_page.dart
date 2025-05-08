@@ -35,56 +35,57 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: MediaQuery.of(context).size.height / 13,
-          backgroundColor: baseAppBarColor,
-          leadingWidth: MediaQuery.of(context).size.width * 0.1,
-          title: Row(
-            children: [
-              const Padding(
-                  padding: EdgeInsets.only(bottom: 6, right: 15),
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/images/user_image.jpg'),
-                  )),
-              Text(name,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: MediaQuery.of(context).size.width * 0.055))
-            ],
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => VoiceCallPage(
-                                name: name,
-                              )));
-                },
-                icon: const Icon(Icons.call, color: Colors.white)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const VideocallPage()));
-                },
-                icon: const Icon(Icons.videocam, color: Colors.white)),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert, color: Colors.white)),
-          ],
-        ),
-        body: Stack(
-          children: [
-            Positioned.fill(
-                child: Image.asset("assets/images/chat_image.jpg",
-                    fit: BoxFit.cover)),
-            Column(
+    return Stack(
+      children: [
+        Positioned.fill(
+            child:
+                Image.asset("assets/images/chat_image.jpg", fit: BoxFit.cover)),
+        Scaffold(
+            appBar: AppBar(
+              iconTheme: const IconThemeData(color: Colors.white),
+              toolbarHeight: MediaQuery.of(context).size.height / 13,
+              backgroundColor: baseAppBarColor,
+              leadingWidth: MediaQuery.of(context).size.width * 0.1,
+              title: Row(
+                children: [
+                  const Padding(
+                      padding: EdgeInsets.only(bottom: 6, right: 15),
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage:
+                            AssetImage('assets/images/user_image.jpg'),
+                      )),
+                  Text(name,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: MediaQuery.of(context).size.width * 0.055))
+                ],
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VoiceCallPage(
+                                    name: name,
+                                  )));
+                    },
+                    icon: const Icon(Icons.call, color: Colors.white)),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const VideocallPage()));
+                    },
+                    icon: const Icon(Icons.videocam, color: Colors.white)),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.more_vert, color: Colors.white)),
+              ],
+            ),
+            body: Column(
               children: [
                 BlocConsumer<ChatCubit, ChatState>(
                   listener: (context, state) {
@@ -210,8 +211,8 @@ class ChatPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ],
-        ));
+            )),
+      ],
+    );
   }
 }
