@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 class MessageModel {
   String senderId;
   String roomId;
+  String? messageId;
   String? time;
   String? text;
   MediaFile? file;
@@ -13,6 +14,7 @@ class MessageModel {
   MessageModel({
     required this.senderId,
     required this.roomId,
+    this.messageId,
     this.time,
     this.text,
     this.file,
@@ -23,6 +25,7 @@ class MessageModel {
     return MessageModel(
       senderId: jsonData['senderId'],
       roomId: jsonData['roomId'],
+      messageId: jsonData['_id'],
       time: jsonData['createdAt'],
       text: jsonData['text'],
       file: jsonData['file'] != null
@@ -35,6 +38,7 @@ class MessageModel {
   Map<String, dynamic> toJson() => {
         'senderId': senderId,
         'roomId': roomId,
+        '_id': messageId,
         'createdAt': time,
         'text': text,
         'file': file?.toJson(),

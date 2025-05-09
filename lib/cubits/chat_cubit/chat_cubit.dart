@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
+import 'package:chat_sdk/models/mess_react.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,7 +22,9 @@ class ChatCubit extends Cubit<ChatState> {
       roomId: roomId,
       text: mess,
     );
-    socket.emit('sendMessage', message.toJson());
+    socket.emitWithAck('sendMessage', message.toJson(), ack: (data) {
+      message.messageId = data['messageId'];
+    });
     emit(ChatSuccess(mess: message));
   }
 
@@ -142,6 +145,14 @@ class ChatCubit extends Cubit<ChatState> {
       if (id != data['senderId']) {
         emit(ChatSuccess(mess: MessageModel.fromJson(data)));
       }
+    });
+  }
+
+  void sendReact({required Socket socket}) {}
+
+  void recvReact({required Socket socket}) {
+    socket.on('receiveReact', (data) {
+      emit(ReactSuccess(react: MessageReact.fromJson(data)));
     });
   }
 }

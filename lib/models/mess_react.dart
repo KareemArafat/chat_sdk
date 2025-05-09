@@ -1,25 +1,25 @@
-class MessageReaction {
+class MessageReact {
   final String messageId;
-  final String userId;
+  final String senderId;
   final String emoji;
 
-  MessageReaction({
+  MessageReact({
     required this.messageId,
-    required this.userId,
+    required this.senderId,
     required this.emoji,
   });
 
-  Map<String, dynamic> toJson() => {
-    'messageId': messageId,
-    'userId': userId,
-    'emoji': emoji,
-  };
-
-  factory MessageReaction.fromJson(Map<String, dynamic> json) {
-    return MessageReaction(
+  factory MessageReact.fromJson(Map<String, dynamic> json) {
+    return MessageReact(
       messageId: json['messageId'],
-      userId: json['userId'],
+      senderId: json['senderId'],
       emoji: json['emoji'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'messageId': messageId,
+        'senderId': senderId,
+        'emoji': emoji,
+      };
 }

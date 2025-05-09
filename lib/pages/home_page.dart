@@ -12,6 +12,7 @@ import 'package:chat_sdk/pages/login_page.dart';
 import 'package:chat_sdk/pages/search_page.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
+import 'package:chat_sdk/ui/custom_ui/menu_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final SocketService socketService = SocketService();
   List<RoomModel> rooms = [];
+  final GlobalKey menuKey = GlobalKey();
 
   @override
   void initState() {
@@ -103,8 +105,11 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
+            key: menuKey,
             icon: const Icon(Icons.more_vert),
-            onPressed: () {},
+            onPressed: () {
+              menuSheet(context, menuKey);
+            },
           ),
         ],
         title: FutureBuilder(

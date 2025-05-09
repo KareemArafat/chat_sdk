@@ -33,3 +33,38 @@ class ReactionBox extends StatelessWidget {
     );
   }
 }
+
+void showReactionBox(BuildContext context, Offset offset,
+    OverlayEntry? activeOverlay, String? selectedEmoji) {
+  activeOverlay?.remove();
+  activeOverlay = OverlayEntry(
+    builder: (context) => Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              activeOverlay!.remove();
+              activeOverlay = null;
+            },
+            child: Container(),
+          ),
+        ),
+        Positioned(
+          top: offset.dy - 70,
+          child: Material(
+            color: Colors.transparent,
+            child: ReactionBox(
+              onReact: (emoji) {
+                selectedEmoji = emoji;
+                activeOverlay!.remove();
+                activeOverlay = null;
+              },
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+  Overlay.of(context).insert(activeOverlay!);
+}

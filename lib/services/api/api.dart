@@ -9,6 +9,7 @@ class Api {
   }) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
+      // 'x-api-key': 'Cy83rXp10iT%20is%20za%20G04T%00',
     };
 
     if (token != null) {
