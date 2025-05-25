@@ -1,92 +1,69 @@
 import 'dart:io';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/services/socket/message_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
 
-  void sendMess(
-      {required Socket socket,
-      required String mess,
-      required String roomId}) async {
+  void sendMess({required String mess, required String roomId}) async {
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(senderId: id, roomId: roomId, text: mess);
-    socket.emitWithAck('sendMessage', message.toJson(), ack: (data) {
-      message.messageId = data['messageId'];
-    });
+    final message = await MessageService()
+        .sendMessage(mess: mess, roomId: roomId, senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void sendImage(
-      {required Socket socket,
-      required ImageSource source,
-      required String roomId}) async {
+  void sendImage({required ImageSource source, required String roomId}) async {
     final result = await ImagePicker().pickImage(source: source);
     if (result == null) return;
     File imgFile = File(result.path);
     final imageBytes = imgFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(
-        senderId: id,
+    final message = await MessageService().sendFiles(
         roomId: roomId,
-        fileTime: DateFormat('hh:mm a').format(DateTime.now()),
-        file: MediaFile(
-          dataSend: imageBytes,
-          type: 'image',
-          name: result.name,
-        ));
-    socket.emit('uploadFiles', message.toJson());
+        bytesFile: imageBytes,
+        name: result.name,
+        type: 'image',
+        senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void sendVideo(
-      {required Socket socket,
-      required ImageSource source,
-      required String roomId}) async {
-    final returnedVideo = await ImagePicker().pickVideo(source: source);
-    if (returnedVideo == null) return;
-    File videoFile = File(returnedVideo.path);
+  void sendVideo({required ImageSource source, required String roomId}) async {
+    final result = await ImagePicker().pickVideo(source: source);
+    if (result == null) return;
+    File videoFile = File(result.path);
     final videoBytes = videoFile.readAsBytesSync();
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(
-        senderId: id,
+    final message = await MessageService().sendFiles(
         roomId: roomId,
-        fileTime: DateFormat('hh:mm a').format(DateTime.now()),
-        file: MediaFile(
-          dataSend: videoBytes,
-          name: returnedVideo.name,
-          type: 'video',
-        ));
-    socket.emit('uploadFiles', message.toJson());
+        bytesFile: videoBytes,
+        name: result.name,
+        type: 'video',
+        senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void sendSound({required Socket socket, required String roomId}) async {
+  void sendSound({required String roomId}) async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
     if (result == null) return;
     File file = File(result.files.single.path!);
     final audioBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(
-        senderId: id,
+    final message = await MessageService().sendFiles(
         roomId: roomId,
-        file: MediaFile(
-          dataSend: audioBytes,
-          name: result.files.single.name,
-          type: 'sound',
-        ));
-    socket.emit('uploadFiles', message.toJson());
+        bytesFile: audioBytes,
+        name: result.files.single.name,
+        type: 'sound',
+        senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void sendFile({required Socket socket, required String roomId}) async {
+  void sendFile({required String roomId}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: [
@@ -102,45 +79,39 @@ class ChatCubit extends Cubit<ChatState> {
     File file = File(result.files.single.path!);
     final fileBytes = await file.readAsBytes();
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(
-        senderId: id,
+    final message = await MessageService().sendFiles(
         roomId: roomId,
-        file: MediaFile(
-          dataSend: fileBytes,
-          name: result.files.single.name,
-          type: 'file',
-        ));
-    socket.emit('uploadFiles', message.toJson());
+        bytesFile: fileBytes,
+        name: result.files.single.name,
+        type: 'file',
+        senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void sendRecord(
-      {required Socket socket,
-      required String path,
-      required String roomId}) async {
+  void sendRecord({required String path, required String roomId}) async {
     File result = File(path);
     final recordBytes = await result.readAsBytes();
     String id = await ShardpModel().getSenderId();
-    final message = MessageModel(
-        senderId: id,
+    final message = await MessageService().sendFiles(
         roomId: roomId,
-        fileTime: DateFormat('hh:mm a').format(DateTime.now()),
-        file: MediaFile(
-          dataSend: recordBytes,
-          name: path,
-          type: 'record',
-        ));
-    socket.emit('uploadFiles', message.toJson());
+        bytesFile: recordBytes,
+        name: path,
+        type: 'record',
+        senderId: id);
     emit(ChatSuccess(mess: message));
   }
 
-  void receiveMess({required Socket socket}) async {
+  void receiveMess() async {
     String id = await ShardpModel().getSenderId();
-    socket.on('message', (data) {
-      if (id != data['senderId']) {
-        emit(ChatSuccess(mess: MessageModel.fromJson(data)));
-      }
-    });
+    // server.socket.on('message', (data) {
+    //   if (id != data['senderId']) {
+    //     emit(ChatSuccess(mess: MessageModel.fromJson(data)));
+    //   }
+    // });
+    final message = MessageService().receiveMessages(senderId: id);
+    if (message != null) {
+      emit(ChatSuccess(mess: message));
+    }
   }
 
   void sendReact({required Socket socket}) {}

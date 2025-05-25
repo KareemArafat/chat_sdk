@@ -4,6 +4,9 @@ import 'package:chat_sdk/consts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
+  SocketService._internal();
+  static final SocketService instance = SocketService._internal();
+  
   late IO.Socket socket;
 
   void connect(String token, String apiKey) async {

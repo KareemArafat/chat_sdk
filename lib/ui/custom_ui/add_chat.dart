@@ -1,11 +1,10 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
-import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void addChat(BuildContext context, SocketService socketService) {
+void addChat(BuildContext context) {
   String user = '';
   showDialog(
     context: context,
@@ -33,7 +32,6 @@ void addChat(BuildContext context, SocketService socketService) {
                     onPressed: () async {
                       Navigator.of(context).pop();
                       BlocProvider.of<RoomsCubit>(context).addRoom(
-                          socketService: socketService,
                           user: [user],
                           type: 'direct');
                     },

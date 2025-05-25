@@ -7,7 +7,6 @@ import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/socket/recoding.dart';
-import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
@@ -21,12 +20,11 @@ class ChatPage extends StatelessWidget {
     this.id,
     required this.name,
     required this.roomId,
-    required this.socketService,
   });
   final String? id;
   final String name;
   final String roomId;
-  final SocketService socketService;
+
   final RecordService recordService = RecordService();
   final TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
@@ -156,53 +154,42 @@ class ChatPage extends StatelessWidget {
                   padding: const EdgeInsets.all(2),
                   child: ChatBottomField(
                     recordObj: recordService,
-                    socketObj: socketService.socket,
                     roomId: roomId,
                     soundFn: () {
                       Navigator.pop(context);
-                      BlocProvider.of<ChatCubit>(context).sendSound(
-                          socket: socketService.socket, roomId: roomId);
+                      BlocProvider.of<ChatCubit>(context)
+                          .sendSound(roomId: roomId);
                     },
                     fileFn: () {
                       Navigator.pop(context);
-                      BlocProvider.of<ChatCubit>(context).sendFile(
-                          socket: socketService.socket, roomId: roomId);
+                      BlocProvider.of<ChatCubit>(context)
+                          .sendFile(roomId: roomId);
                     },
                     videoRecordFn: () {
                       Navigator.pop(context);
                       BlocProvider.of<ChatCubit>(context).sendVideo(
-                          source: ImageSource.camera,
-                          socket: socketService.socket,
-                          roomId: roomId);
+                          source: ImageSource.camera, roomId: roomId);
                     },
                     videoFn: () {
                       Navigator.pop(context);
                       BlocProvider.of<ChatCubit>(context).sendVideo(
-                          source: ImageSource.gallery,
-                          socket: socketService.socket,
-                          roomId: roomId);
+                          source: ImageSource.gallery, roomId: roomId);
                     },
                     imageFn: () {
                       Navigator.pop(context);
                       BlocProvider.of<ChatCubit>(context).sendImage(
-                          source: ImageSource.gallery,
-                          socket: socketService.socket,
-                          roomId: roomId);
+                          source: ImageSource.gallery, roomId: roomId);
                     },
                     cameraFn: () {
                       Navigator.pop(context);
 
                       BlocProvider.of<ChatCubit>(context).sendImage(
-                          source: ImageSource.camera,
-                          socket: socketService.socket,
-                          roomId: roomId);
+                          source: ImageSource.camera, roomId: roomId);
                     },
                     controller: textController,
                     submitted: (p0) {
-                      BlocProvider.of<ChatCubit>(context).sendMess(
-                          socket: socketService.socket,
-                          mess: p0,
-                          roomId: roomId);
+                      BlocProvider.of<ChatCubit>(context)
+                          .sendMess(mess: p0, roomId: roomId);
                       textController.clear();
                     },
                   ),

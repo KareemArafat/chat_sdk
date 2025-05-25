@@ -1,16 +1,14 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
-import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatHomeCard extends StatelessWidget {
   const ChatHomeCard(
-      {super.key, required this.room, required this.socketService});
+      {super.key, required this.room});
   final RoomModel room;
-  final SocketService socketService;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +53,6 @@ class ChatHomeCard extends StatelessWidget {
           return ChatPage(
             id: id,
             roomId: room.roomId,
-            socketService: socketService,
             name: name,
           );
         }));

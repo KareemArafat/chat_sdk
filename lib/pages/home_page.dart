@@ -3,7 +3,6 @@ import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/custom_ui/add_group_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
@@ -27,16 +26,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final SocketService socketService = SocketService();
   List<RoomModel> rooms = [];
   final GlobalKey menuKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    socketService.connect(widget.token,widget.apiKey);
-    BlocProvider.of<ChatCubit>(context)
-        .receiveMess(socket: socketService.socket);
+    server.connect(widget.token, widget.apiKey);
+    BlocProvider.of<ChatCubit>(context).receiveMess();
     getRoomsCards();
   }
 
@@ -47,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    socketService.dispose();
+    server.dispose();
   }
 
   @override
@@ -90,13 +87,13 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                addGroupChat(context, socketService);
+                addGroupChat(context);
               },
               icon: const Icon(Icons.group_add)),
           IconButton(
             icon: const Icon(Icons.person_add_alt_1),
             onPressed: () {
-              addChat(context, socketService);
+              addChat(context);
             },
           ),
           IconButton(
@@ -183,7 +180,6 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return ChatHomeCard(
                         room: rooms[index],
-                        socketService: socketService,
                       );
                     },
                   ),

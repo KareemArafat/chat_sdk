@@ -1,11 +1,10 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
-import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/custom_ui/custom_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void addGroupChat(BuildContext context, SocketService socketService) {
+void addGroupChat(BuildContext context) {
   String groupName = '';
   Map<int, String> users = {};
 
@@ -73,7 +72,6 @@ void addGroupChat(BuildContext context, SocketService socketService) {
                           .toList();
                       Navigator.of(context).pop();
                       BlocProvider.of<RoomsCubit>(context).addRoom(
-                          socketService: socketService,
                           user: filledUsers,
                           name: groupName,
                           type: 'group');

@@ -4,15 +4,13 @@ import 'package:chat_sdk/ui/custom_ui/recoding_control.dart';
 import 'package:chat_sdk/services/socket/recoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 // ignore: must_be_immutable
 class VoiceRecorderScreen extends StatefulWidget {
   VoiceRecorderScreen(
-      {super.key, required this.recordObj, required this.socketObj,required this.roomId});
+      {super.key, required this.recordObj, required this.roomId});
 
   RecordService recordObj;
-  Socket socketObj;
   String roomId;
 
   @override
@@ -60,7 +58,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> {
               await _stopRecording();
               // ignore: use_build_context_synchronously
               BlocProvider.of<ChatCubit>(context).sendRecord(
-                  socket: widget.socketObj, path: widget.recordObj.audioPath!,roomId: widget.roomId);
+                  path: widget.recordObj.audioPath!, roomId: widget.roomId);
             },
             onCancel: () async {
               await _stopRecording();

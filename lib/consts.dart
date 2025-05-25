@@ -1,4 +1,3 @@
-
 import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +8,6 @@ const baseGroundColor = Color(0xFF080B2C);
 
 const baseUrl = 'http://192.168.1.3:6969';
 
-//final server = SocketService.instance;
+final server = SocketService.instance;
 
 const contactsList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "G"];
