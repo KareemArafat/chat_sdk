@@ -1,14 +1,13 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/pages/video_call_page.dart';
 import 'package:chat_sdk/pages/voice_call_page.dart';
 import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/services/socket/recoding.dart';
-import 'package:chat_sdk/services/socket/socket.dart';
+import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
@@ -67,9 +66,7 @@ class ChatPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => VoiceCallPage(
-                                    name: name,
-                                  )));
+                              builder: (context) => VoiceCallPage(name: name)));
                     },
                     icon: const Icon(Icons.call, color: Colors.white)),
                 IconButton(
@@ -77,7 +74,7 @@ class ChatPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const VideocallPage()));
+                              builder: (context) => VoiceCallPage(name: name)));
                     },
                     icon: const Icon(Icons.videocam, color: Colors.white)),
                 IconButton(

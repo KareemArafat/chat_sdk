@@ -83,7 +83,8 @@ class AudioPlayerState extends State<SoundBubble> {
                           : GestureDetector(
                               onTap: () async {
                                 try {
-                                  String token = await ShardpModel().getToken();
+                                  String token =
+                                      await ShardpModel().getToken();
                                   widget.o.file!.dataSend = await LoadFiles()
                                       .getFileFn(
                                           path: widget.o.file!.path!,

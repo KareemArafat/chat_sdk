@@ -73,7 +73,6 @@ class FileBubble extends StatelessWidget {
   }
 }
 
-
 class FileView extends StatefulWidget {
   const FileView({super.key, required this.o});
   final MessageModel o;

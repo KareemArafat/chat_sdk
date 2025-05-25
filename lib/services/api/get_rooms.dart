@@ -6,10 +6,10 @@ import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 
 class GetRooms {
   Future<List<RoomModel>?> getRoomsFn() async {
-    String userEmail =await ShardpModel().getUserName();
+    String userId = await ShardpModel().getUserId();
     try {
       final dataList =
-          await Api().get(url: "$baseUrl/rooms?username=$userEmail");
+          await Api().get(url: "$baseUrl/rooms?userId=$userId");
       List<RoomModel>? roomsList = [];
       for (int i = 0; i < dataList['rooms'].length; i++) {
         roomsList.add(RoomModel.fromJson(dataList['rooms'][i]));

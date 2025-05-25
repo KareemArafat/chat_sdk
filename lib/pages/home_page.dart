@@ -3,12 +3,12 @@ import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
 import 'package:chat_sdk/models/room_model.dart';
-import 'package:chat_sdk/services/socket/socket.dart';
+import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/ui/custom_ui/add_group_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
-import 'package:chat_sdk/pages/login_page.dart';
+import 'package:chat_sdk/pages/sign_page.dart';
 import 'package:chat_sdk/pages/search_page.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
@@ -18,8 +18,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.token});
+  const HomePage({super.key, required this.token, required this.apiKey});
   final String token;
+  final String apiKey;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    socketService.connect(widget.token);
+    socketService.connect(widget.token,widget.apiKey);
     BlocProvider.of<ChatCubit>(context)
         .receiveMess(socket: socketService.socket);
     getRoomsCards();
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
+                    builder: (context) => const SignPage(),
                   ));
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
@@ -113,7 +114,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         title: FutureBuilder(
-          future: ShardpModel().getFullName(),
+          future: ShardpModel().getUserName(),
           builder: (context, snapshot) {
             return Text(snapshot.data ?? '',
                 style: TextStyle(

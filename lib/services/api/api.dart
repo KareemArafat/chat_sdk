@@ -5,12 +5,17 @@ class Api {
   Future<dynamic> post({
     required String url,
     required Map<String, dynamic> body,
+    String? header,
     String? token,
   }) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      // 'x-api-key': 'Cy83rXp10iT%20is%20za%20G04T%00',
     };
+
+    if (header != null) {
+      headers.addAll({'x-api-key': header});
+      //  Z0bryi$Z0br6969
+    }
 
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});

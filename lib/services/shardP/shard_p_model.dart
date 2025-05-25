@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShardpModel {
-  Future<void> setLoginValue({bool flag=true}) async {
+  Future<void> setLoginValue({bool flag = true}) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     await sp.setBool('Login', flag);
   }
@@ -11,24 +11,24 @@ class ShardpModel {
     return sp.getBool('Login') ?? false;
   }
 
-  Future<void> setFirstName(String x) async {
+  Future<void> setUserName(String x) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setString('first', x);
+    await sp.setString('name', x);
   }
 
-  Future<String> getFirstName() async {
+  Future<String> getUserName() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    return sp.getString('first') ?? '';
+    return sp.getString('name') ?? '';
   }
 
-  Future<void> setLastName(String x) async {
+  Future<void> setUserId(String x) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setString('last', x);
+    await sp.setString('userId', x);
   }
 
-  Future<String> getLastName() async {
+  Future<String> getUserId() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    return sp.getString('last') ?? '';
+    return sp.getString('userId') ?? '';
   }
 
   Future<void> setSenderId(String x) async {
@@ -43,27 +43,21 @@ class ShardpModel {
 
   Future<void> setToken(String x) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setString('tok', x);
+    await sp.setString('token', x);
   }
 
   Future<String> getToken() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    return sp.getString('tok') ?? '';
+    return sp.getString('token') ?? '';
   }
 
-  Future<String> getFullName() async {
-    String firstName = await ShardpModel().getFirstName();
-    String lastName = await ShardpModel().getLastName();
-    return '$firstName $lastName';
+  Future<void> setApiKey(String x) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    await sp.setString('key', x);
   }
 
-  
-  Future<void> setUserName(String x) async {
+  Future<String> getApiKey() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    await sp.setString('username', x);
-  }
-   Future<String> getUserName() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    return sp.getString('username') ?? '';
+    return sp.getString('key') ?? '';
   }
 }

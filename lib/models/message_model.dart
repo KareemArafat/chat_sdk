@@ -10,6 +10,7 @@ class MessageModel {
   String? text;
   MediaFile? file;
   String? fileTime;
+  List<String>? reacts;
 
   MessageModel({
     required this.senderId,
@@ -19,6 +20,7 @@ class MessageModel {
     this.text,
     this.file,
     this.fileTime,
+    this.reacts,
   });
 
   factory MessageModel.fromJson(jsonData) {
@@ -32,6 +34,9 @@ class MessageModel {
           ? MediaFile.fromJson(jsonData['file'])
           : null,
       fileTime: jsonData['time'],
+      reacts: jsonData['reacts'] != null
+          ? List<String>.from(jsonData['reacts'])
+          : null,
     );
   }
 
@@ -43,6 +48,7 @@ class MessageModel {
         'text': text,
         'file': file?.toJson(),
         'time': fileTime,
+        'reacts': reacts,
       };
 }
 

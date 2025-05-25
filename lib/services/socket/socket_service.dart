@@ -6,11 +6,11 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class SocketService {
   late IO.Socket socket;
 
-  void connect(String token) async {
+  void connect(String token, String apiKey) async {
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
-      'auth': {'token': token},
+      'auth': {'token': token, 'key': apiKey},
     });
     socket.connect();
     socket.off('connect');

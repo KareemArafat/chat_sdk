@@ -1,7 +1,7 @@
 import 'package:chat_sdk/consts.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
-import 'package:chat_sdk/services/socket/socket.dart';
+import 'package:chat_sdk/services/socket/socket_service.dart';
 import 'package:chat_sdk/services/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +39,7 @@ class ChatHomeCard extends StatelessWidget {
     }
 
     Future<String> nameFn() async {
-      String email = await ShardpModel().getUserName();
+      String email = await ShardpModel().getUserId();
       if (room.users!.first == email) {
         return room.users!.last;
       } else {
