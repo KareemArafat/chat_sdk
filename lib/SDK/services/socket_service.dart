@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -8,7 +8,7 @@ class SocketService {
 
   late IO.Socket socket;
 
-  void connect(String token, String apiKey) async {
+  void connectToServer(String token, String apiKey) async {
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -22,9 +22,8 @@ class SocketService {
     socket.onError((error) => log('Socket error client side: $error'));
   }
 
-  void dispose() {
+  void closeServerConnection() {
     socket.disconnect();
     socket.dispose();
-    log('Socket connection closed ✔✔');
   }
 }

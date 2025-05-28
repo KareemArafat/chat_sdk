@@ -1,7 +1,7 @@
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/ui/custom_ui/attachment_bottom_sheet.dart';
 import 'package:chat_sdk/ui/custom_ui/recording_process.dart';
-import 'package:chat_sdk/services/socket/recoding.dart';
+import 'package:chat_sdk/ui/bubbles_ui/recoding.dart';
 import 'package:flutter/material.dart';
 
 class ChatBottomField extends StatelessWidget {

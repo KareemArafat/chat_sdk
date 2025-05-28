@@ -1,8 +1,8 @@
 import 'dart:developer';
-import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/models/message_model.dart';
-import 'package:chat_sdk/services/api/get_file.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/SDK/services/message_service.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -159,8 +159,8 @@ class _VideoViewState extends State<VideoView> {
                             setState(() => isLoading = true);
                             try {
                               final token = await ShardpModel().getToken();
-                              widget.o.file!.dataSend = await LoadFiles()
-                                  .getFileFn(
+                              widget.o.file!.dataSend = await MessageService()
+                                  .downloadFiles(
                                       path: widget.o.file!.path!, token: token);
                               widget.o.file!.path = null;
                               await _initializeVideo();

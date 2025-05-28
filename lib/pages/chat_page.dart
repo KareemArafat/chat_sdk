@@ -1,12 +1,12 @@
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/pages/voice_call_page.dart';
 import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
-import 'package:chat_sdk/models/message_model.dart';
-import 'package:chat_sdk/services/socket/recoding.dart';
+import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/recoding.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
@@ -29,6 +29,8 @@ class ChatPage extends StatelessWidget {
   final TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final List<MessageModel> messageList = [];
+  final bool isOnline = true;
+  final bool isTyping = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,19 @@ class ChatPage extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.white),
               toolbarHeight: MediaQuery.of(context).size.height / 13,
               backgroundColor: baseAppBarColor,
+              // flexibleSpace: Container(
+              //   decoration: const BoxDecoration(
+              //     gradient: LinearGradient(
+              //       colors: [
+              //         Color();
+              //         baseGroundColor,
+              //         baseAppBarColor,
+              //       ], // You can use any colors
+              //       begin: Alignment.topCenter,
+              //       end: Alignment.bottomCenter,
+              //     ),
+              //   ),
+              // ),
               leadingWidth: MediaQuery.of(context).size.width * 0.1,
               title: Row(
                 children: [
@@ -52,10 +67,33 @@ class ChatPage extends StatelessWidget {
                         backgroundImage:
                             AssetImage('assets/images/user_image.jpg'),
                       )),
-                  Text(name,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: MediaQuery.of(context).size.width * 0.055))
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.058)),
+                      isTyping
+                          ? Text('Typing ..',
+                              style: TextStyle(
+                                  color: const Color.fromARGB(255, 11, 255, 52),
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.035,
+                                  fontWeight: FontWeight.w500))
+                          : isOnline
+                              ? Text('Online',
+                                  style: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 11, 255, 52),
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                              0.035,
+                                      fontWeight: FontWeight.w500))
+                              : const SizedBox.shrink(),
+                    ],
+                  )
                 ],
               ),
               actions: [

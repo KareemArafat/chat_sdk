@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
-import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/SDK/core/api/api.dart';
 import 'package:intl/intl.dart';
 
 class MessageService {
@@ -44,6 +46,18 @@ class MessageService {
     return message;
   }
 
+  Future<Uint8List?> downloadFiles(
+      {required String path, required String token}) async {
+    try {
+      final dataList = await Api()
+          .getFile(url: "$baseUrl/download?path=$path&&token=$token");
+      return dataList;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
   MessageModel? receiveMessages({required String senderId}) {
     MessageModel? message;
     server.socket.on('message', (data) {
@@ -52,5 +66,17 @@ class MessageService {
       }
     });
     return message;
+  }
+
+  void sendReact({required String messageId, required String react}) {
+    server.socket.emit('sendReact', {'messageId': messageId, 'react': react});
+  }
+
+  String? receiveReact() {
+    String? react;
+    server.socket.on('receiveReact', (data) {
+      react = data;
+    });
+    return react;
   }
 }

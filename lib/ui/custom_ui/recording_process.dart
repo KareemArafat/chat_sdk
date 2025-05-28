@@ -1,7 +1,7 @@
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/ui/custom_ui/recoding_control.dart';
-import 'package:chat_sdk/services/socket/recoding.dart';
+import 'package:chat_sdk/ui/bubbles_ui/recoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

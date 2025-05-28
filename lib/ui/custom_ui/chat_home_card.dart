@@ -1,7 +1,7 @@
-import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/models/room_model.dart';
+import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/SDK/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

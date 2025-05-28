@@ -11,7 +11,7 @@ class RecordService {
   Duration _recordingDuration = Duration.zero;
   Timer? _timer;
   Function(Duration)? onDurationUpdate;
-  bool _isRecorderInitialized = false; // NEW: Track recorder initialization
+  bool _isRecorderInitialized = false;
 
   RecordService({this.onDurationUpdate}) {
     _recorder = FlutterSoundRecorder();
@@ -36,7 +36,7 @@ class RecordService {
 
   Future<void> startRecording() async {
     try {
-      await _initializeRecorder(); // Ensure initialization completes before starting
+      await _initializeRecorder();
 
       final directory = await getApplicationDocumentsDirectory();
       _audioPath = '${directory.path}/recorded_audio.wav';

@@ -1,5 +1,5 @@
-import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/SDK/models/message_model.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:flutter/material.dart';

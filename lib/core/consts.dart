@@ -1,4 +1,4 @@
-import 'package:chat_sdk/services/socket/socket_service.dart';
+import 'package:chat_sdk/SDK/services/socket_service.dart';
 import 'package:flutter/material.dart';
 
 const baseColor1 = Color.fromARGB(255, 96, 2, 191);

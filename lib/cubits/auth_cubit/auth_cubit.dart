@@ -1,6 +1,6 @@
 import 'package:chat_sdk/cubits/auth_cubit/auth_states.dart';
-import 'package:chat_sdk/services/api/sign_post.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/SDK/core/api/sign_post.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
@@ -14,8 +14,7 @@ class AuthCubit extends Cubit<AuthStates> {
     emit(LoginLoading());
 
     try {
-      await LoginPost()
-          .loginPostFn(userId: userId, appToken: appToken, apiKey: apiKey);
+      await Sign().loginFn(userId: userId, appToken: appToken, apiKey: apiKey);
       ShardpModel().setLoginValue(flag: true);
       String token = await ShardpModel().getToken();
       emit(LoginSuccess(apiKey: apiKey, token: token));
@@ -23,14 +22,14 @@ class AuthCubit extends Cubit<AuthStates> {
       if (e.toString() ==
           'Exception: Error: 401, Response: {"status":"FAIL","message":"Invalid userId or appToken"}') {
         try {
-          await RegisterPost().signPostFn(
+          await Sign().registerFn(
             userName: userName,
             userId: userId,
             appToken: appToken,
             apiKey: apiKey,
           );
-          await LoginPost()
-              .loginPostFn(userId: userId, appToken: appToken, apiKey: apiKey);
+          await Sign()
+              .loginFn(userId: userId, appToken: appToken, apiKey: apiKey);
           String token = await ShardpModel().getToken();
           emit(LoginSuccess(apiKey: apiKey, token: token));
         } catch (e) {

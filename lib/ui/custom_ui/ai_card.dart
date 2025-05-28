@@ -1,4 +1,4 @@
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/pages/ai_chat_page.dart';
 import 'package:flutter/material.dart';
 

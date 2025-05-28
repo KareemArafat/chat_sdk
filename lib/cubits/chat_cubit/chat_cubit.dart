@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
-import 'package:chat_sdk/services/socket/message_service.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
+import 'package:chat_sdk/SDK/services/message_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
@@ -103,18 +104,33 @@ class ChatCubit extends Cubit<ChatState> {
 
   void receiveMess() async {
     String id = await ShardpModel().getSenderId();
-    // server.socket.on('message', (data) {
-    //   if (id != data['senderId']) {
-    //     emit(ChatSuccess(mess: MessageModel.fromJson(data)));
-    //   }
-    // });
-    final message = MessageService().receiveMessages(senderId: id);
-    if (message != null) {
-      emit(ChatSuccess(mess: message));
-    }
+    server.socket.on('message', (data) {
+      if (id != data['senderId']) {
+        emit(ChatSuccess(mess: MessageModel.fromJson(data)));
+      }
+    });
+    // final message = MessageService().receiveMessages(senderId: id);
+    // if (message != null) {
+    //   emit(ChatSuccess(mess: message));
+    // }
   }
 
-  void sendReact({required Socket socket}) {}
+  void sendReact({required String react, required String messId}) {
+    server.socket.emit('sendReact', {'messageId': messId, 'type': react});
+    emit(ReactSuccess(react: react, messId: messId));
+  }
 
-  void recvReact({required Socket socket}) {}
+  void receiveReact() {
+    String? messId;
+    String? react;
+    server.socket.on(
+      'receiveReact',
+      (data) {
+        messId = data['messageId'];
+        react = data['type'];
+        emit(ReactSuccess(react: react!, messId: messId!));
+      },
+    );
+     
+  }
 }

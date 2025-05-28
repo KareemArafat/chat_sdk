@@ -1,9 +1,9 @@
-import 'package:chat_sdk/consts.dart';
-import 'package:chat_sdk/services/api/api.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/SDK/core/api/api.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 
-class LoginPost {
-  Future<Map<String, dynamic>> loginPostFn({
+class Sign {
+  Future<Map<String, dynamic>> loginFn({
     required String userId,
     required String appToken,
     required String apiKey,
@@ -27,10 +27,8 @@ class LoginPost {
     await ShardpModel().setApiKey(apiKey);
     return responseData;
   }
-}
 
-class RegisterPost {
-  Future<Map<String, dynamic>> signPostFn({
+  Future<Map<String, dynamic>> registerFn({
     required String userName,
     required String userId,
     required String appToken,

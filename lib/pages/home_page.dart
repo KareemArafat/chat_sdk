@@ -1,15 +1,15 @@
-import 'package:chat_sdk/consts.dart';
+import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
-import 'package:chat_sdk/models/room_model.dart';
+import 'package:chat_sdk/SDK/models/room_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_group_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
 import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/sign_page.dart';
 import 'package:chat_sdk/pages/search_page.dart';
-import 'package:chat_sdk/services/shardP/shard_p_model.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/menu_sheet.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +32,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    server.connect(widget.token, widget.apiKey);
+    server.connectToServer(widget.token, widget.apiKey);
     BlocProvider.of<ChatCubit>(context).receiveMess();
+     BlocProvider.of<ChatCubit>(context).receiveReact();
     getRoomsCards();
   }
 
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    server.dispose();
+    server.closeServerConnection();
   }
 
   @override
