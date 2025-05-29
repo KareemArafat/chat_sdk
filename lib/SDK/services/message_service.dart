@@ -79,4 +79,16 @@ class MessageService {
     });
     return react;
   }
+
+  Future<String> aiMessage({
+    required String message,
+  }) async {
+    final responseData = await Api().post(
+      url: "http://localhost:3000/chat",
+      body: {
+        'message': message,
+      },
+    );
+    return responseData;
+  }
 }

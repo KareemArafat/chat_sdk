@@ -14,3 +14,13 @@ final class ReactSuccess extends ChatState {
   final String messId;
   ReactSuccess({required this.react, required this.messId});
 }
+
+final class AiMessageSent  extends ChatState {
+  final String mess;
+  AiMessageSent({required this.mess});
+}
+
+final class AiMessageReceived  extends ChatState {
+  final String mess;
+  AiMessageReceived({required this.mess});
+}

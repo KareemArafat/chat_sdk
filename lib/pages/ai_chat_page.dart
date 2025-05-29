@@ -1,8 +1,11 @@
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AiChatPage extends StatefulWidget {
   const AiChatPage({super.key});
@@ -12,7 +15,9 @@ class AiChatPage extends StatefulWidget {
 }
 
 class _AiChatPageState extends State<AiChatPage> {
-  List<MessageModel> messages = [];
+  final TextEditingController textController = TextEditingController();
+  List<MessageModel> messageList = [];
+  List<bool> isMeList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +53,41 @@ class _AiChatPageState extends State<AiChatPage> {
           ),
           body: Column(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[index];
-                    return TextBubble(
-                      o: message,
-                      isMe: true,
-                    );
-                  },
-                ),
+              BlocConsumer<ChatCubit, ChatState>(
+                listener: (context, state) {
+                  if (state is AiMessageSent) {
+                    MessageModel messageModel = MessageModel();
+                    messageModel.text = state.mess;
+                    messageList.add(messageModel);
+                    isMeList.add(true);
+                  }
+                  if (state is AiMessageReceived) {
+                    MessageModel messageModel = MessageModel();
+                    messageModel.text = state.mess;
+                    messageList.add(messageModel);
+                    isMeList.add(false);
+                  }
+                },
+                builder: (context, state) {
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: messageList.length,
+                      itemBuilder: (context, index) {
+                        return TextBubble(
+                          o: messageList[index],
+                          isMe: isMeList[index],
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-              const ChatBottomField(
+              ChatBottomField(
+                controller: textController,
+                submitted: (p0) {
+                  BlocProvider.of<ChatCubit>(context).aiMessage(message: p0);
+                  textController.clear();
+                },
                 aiChat: true,
               )
             ],

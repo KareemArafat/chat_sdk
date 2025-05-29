@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     server.connectToServer(widget.token, widget.apiKey);
     BlocProvider.of<ChatCubit>(context).receiveMess();
-     BlocProvider.of<ChatCubit>(context).receiveReact();
+    BlocProvider.of<ChatCubit>(context).receiveReact();
     getRoomsCards();
   }
 

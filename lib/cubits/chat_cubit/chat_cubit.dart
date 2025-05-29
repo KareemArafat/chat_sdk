@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:chat_sdk/SDK/models/message_model.dart';
 import 'package:chat_sdk/core/consts.dart';
@@ -131,6 +132,15 @@ class ChatCubit extends Cubit<ChatState> {
         emit(ReactSuccess(react: react!, messId: messId!));
       },
     );
-     
+  }
+
+  void aiMessage({required String message}) async {
+    emit(AiMessageSent(mess: message));
+    try {
+      String response = await MessageService().aiMessage(message: message);
+      emit(AiMessageReceived(mess: response));
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 
 class MessageModel {
-  String senderId;
-  String roomId;
+  String? senderId;
+  String? roomId;
   String? messageId;
   String? time;
   String? text;
@@ -13,8 +13,8 @@ class MessageModel {
   List<String>? reacts;
 
   MessageModel({
-    required this.senderId,
-    required this.roomId,
+    this.senderId,
+    this.roomId,
     this.messageId,
     this.time,
     this.text,
