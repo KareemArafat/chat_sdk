@@ -13,7 +13,6 @@ class Api {
     };
     if (header != null) {
       headers.addAll({'x-api-key': header});
-      //  Z0bryi$Z0br6969
     }
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});

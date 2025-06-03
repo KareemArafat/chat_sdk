@@ -1,11 +1,12 @@
 import 'package:chat_sdk/core/api/sign_post.dart';
 
 class AuthService {
-  void initialize(
-      {required String userName,
-      required String userId,
-      required String appToken,
-      required String apiKey}) async {
+  void initialize({
+    required String userName,
+    required String userId,
+    required String appToken,
+    required String apiKey,
+  }) async {
     try {
       await Sign().loginFn(userId: userId, appToken: appToken, apiKey: apiKey);
     } catch (e) {

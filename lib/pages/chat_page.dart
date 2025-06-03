@@ -2,11 +2,11 @@ import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/pages/voice_call_page.dart';
+import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_bottom_field.dart';
-import 'package:chat_sdk/SDK/models/message_model.dart';
-import 'package:chat_sdk/ui/bubbles_ui/recoding.dart';
+import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/image_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/video_bubble.dart';
@@ -24,16 +24,15 @@ class ChatPage extends StatelessWidget {
   final String? id;
   final String name;
   final String roomId;
-
-  final RecordService recordService = RecordService();
   final TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final List<MessageModel> messageList = [];
-  final bool isOnline = true;
-  final bool isTyping = false;
 
   @override
   Widget build(BuildContext context) {
+    bool isWriting = false;
+    bool isOnline = false;
+    bool isTyping = false;
     return Stack(
       children: [
         Positioned.fill(
@@ -44,19 +43,6 @@ class ChatPage extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.white),
               toolbarHeight: MediaQuery.of(context).size.height / 13,
               backgroundColor: baseAppBarColor,
-              // flexibleSpace: Container(
-              //   decoration: const BoxDecoration(
-              //     gradient: LinearGradient(
-              //       colors: [
-              //         Color();
-              //         baseGroundColor,
-              //         baseAppBarColor,
-              //       ], // You can use any colors
-              //       begin: Alignment.topCenter,
-              //       end: Alignment.bottomCenter,
-              //     ),
-              //   ),
-              // ),
               leadingWidth: MediaQuery.of(context).size.width * 0.1,
               title: Row(
                 children: [
@@ -67,23 +53,26 @@ class ChatPage extends StatelessWidget {
                         backgroundImage:
                             AssetImage('assets/images/user_image.jpg'),
                       )),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.058)),
-                      isTyping
-                          ? Text('Typing ..',
+                  BlocConsumer<ChatCubit, ChatState>(
+                    listener: (context, state) {
+                      if (state is Typing && state.userId != id) {
+                        isTyping = state.typing;
+                      }
+                      if (state is Online && state.userId != id) {
+                        isOnline = state.online;
+                      }
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(name,
                               style: TextStyle(
-                                  color: const Color.fromARGB(255, 11, 255, 52),
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.035,
-                                  fontWeight: FontWeight.w500))
-                          : isOnline
-                              ? Text('Online',
+                                  color: Colors.white,
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.058)),
+                          isTyping
+                              ? Text('Typing ..',
                                   style: TextStyle(
                                       color: const Color.fromARGB(
                                           255, 11, 255, 52),
@@ -91,8 +80,20 @@ class ChatPage extends StatelessWidget {
                                           MediaQuery.of(context).size.width *
                                               0.035,
                                       fontWeight: FontWeight.w500))
-                              : const SizedBox.shrink(),
-                    ],
+                              : isOnline
+                                  ? Text('Online',
+                                      style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              255, 11, 255, 52),
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.035,
+                                          fontWeight: FontWeight.w500))
+                                  : const SizedBox.shrink(),
+                        ],
+                      );
+                    },
                   )
                 ],
               ),
@@ -145,7 +146,7 @@ class ChatPage extends StatelessWidget {
                               message.file?.dataSend == null) {
                             return TextBubble(o: message, isMe: true);
                           } else if (message.senderId != id &&
-                              message.file?.dataSend == null) {
+                              message.file?.path == null) {
                             return TextBubble(o: message, isMe: false);
                           } else if (message.senderId == id &&
                               message.file!.type == 'image') {
@@ -191,7 +192,6 @@ class ChatPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(2),
                   child: ChatBottomField(
-                    recordObj: recordService,
                     roomId: roomId,
                     soundFn: () {
                       Navigator.pop(context);
@@ -228,7 +228,17 @@ class ChatPage extends StatelessWidget {
                     submitted: (p0) {
                       BlocProvider.of<ChatCubit>(context)
                           .sendMess(mess: p0, roomId: roomId);
+                      RoomsService().typing(roomId, false);
                       textController.clear();
+                    },
+                    changed: (p0) {
+                      if (p0.isNotEmpty && !isWriting) {
+                        RoomsService().typing(roomId, true);
+                        isWriting = true;
+                      } else if (p0.isEmpty) {
+                        RoomsService().typing(roomId, false);
+                        isWriting = false;
+                      }
                     },
                   ),
                 ),

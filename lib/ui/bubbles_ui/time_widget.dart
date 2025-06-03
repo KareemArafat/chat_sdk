@@ -10,14 +10,10 @@ class TimeWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right: 5, left: 12),
         child: Text(
           time == null ? DateFormat('hh:mm a').format(DateTime.now()) : time!,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 10),
         ),
       ),
     );

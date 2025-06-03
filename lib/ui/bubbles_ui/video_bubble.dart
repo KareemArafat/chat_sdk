@@ -1,10 +1,14 @@
 import 'dart:developer';
 import 'package:chat_sdk/core/consts.dart';
-import 'package:chat_sdk/SDK/models/message_model.dart';
-import 'package:chat_sdk/SDK/services/message_service.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
+import 'package:chat_sdk/models/message_model.dart';
+import 'package:chat_sdk/services/message_service.dart';
 import 'package:chat_sdk/core/shardP/shard_p_model.dart';
+import 'package:chat_sdk/ui/bubbles_ui/react_box.dart';
 import 'package:chat_sdk/ui/bubbles_ui/time_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
@@ -16,28 +20,79 @@ class VideoBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(15),
-              topRight: const Radius.circular(15),
-              bottomRight: isMe ? const Radius.circular(30) : Radius.zero,
-              bottomLeft: isMe ? Radius.zero : const Radius.circular(30),
-            ),
-            color: isMe ? baseColor1 : baseAppBarColor,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    return GestureDetector(
+      onLongPressStart: (details) {
+        showReactionBox(context, details.globalPosition, o.messageId!, isMe);
+      },
+      child: Align(
+        alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              VideoView(o: o),
-              const SizedBox(height: 4),
-              const TimeWidget(),
+              IntrinsicWidth(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(15),
+                      topRight: const Radius.circular(15),
+                      bottomRight:
+                          isMe ? const Radius.circular(30) : Radius.zero,
+                      bottomLeft:
+                          isMe ? Radius.zero : const Radius.circular(30),
+                    ),
+                    color: isMe ? baseColor1 : baseAppBarColor,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      VideoView(o: o),
+                      const SizedBox(height: 4),
+                      const TimeWidget(),
+                    ],
+                  ),
+                ),
+              ),
+              BlocConsumer<ChatCubit, ChatState>(
+                listener: (context, state) {
+                  if (state is ReactSuccess) {
+                    if (o.messageId == state.messId) {
+                      o.reacts = [state.react];
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (o.reacts != null) {
+                    return Positioned(
+                      bottom: -10,
+                      left: isMe ? null : 0,
+                      right: isMe ? 0 : null,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          shape: BoxShape.circle,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 2,
+                              offset: Offset(1, 1),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          o.reacts![0],
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ],
           ),
         ),

@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:chat_sdk/SDK/models/message_model.dart';
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/core/shardP/shard_p_model.dart';
-import 'package:chat_sdk/SDK/services/message_service.dart';
+import 'package:chat_sdk/services/message_service.dart';
+import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,9 +12,8 @@ class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
 
   void sendMess({required String mess, required String roomId}) async {
-    String id = await ShardpModel().getSenderId();
-    final message = await MessageService()
-        .sendMessage(mess: mess, roomId: roomId, senderId: id);
+    final message =
+        await MessageService().sendMessage(mess: mess, roomId: roomId);
     emit(ChatSuccess(mess: message));
   }
 
@@ -24,13 +22,11 @@ class ChatCubit extends Cubit<ChatState> {
     if (result == null) return;
     File imgFile = File(result.path);
     final imageBytes = imgFile.readAsBytesSync();
-    String id = await ShardpModel().getSenderId();
     final message = await MessageService().sendFiles(
         roomId: roomId,
         bytesFile: imageBytes,
         name: result.name,
-        type: 'image',
-        senderId: id);
+        type: 'image');
     emit(ChatSuccess(mess: message));
   }
 
@@ -39,13 +35,11 @@ class ChatCubit extends Cubit<ChatState> {
     if (result == null) return;
     File videoFile = File(result.path);
     final videoBytes = videoFile.readAsBytesSync();
-    String id = await ShardpModel().getSenderId();
     final message = await MessageService().sendFiles(
         roomId: roomId,
         bytesFile: videoBytes,
         name: result.name,
-        type: 'video',
-        senderId: id);
+        type: 'video');
     emit(ChatSuccess(mess: message));
   }
 
@@ -55,13 +49,11 @@ class ChatCubit extends Cubit<ChatState> {
     if (result == null) return;
     File file = File(result.files.single.path!);
     final audioBytes = await file.readAsBytes();
-    String id = await ShardpModel().getSenderId();
     final message = await MessageService().sendFiles(
         roomId: roomId,
         bytesFile: audioBytes,
         name: result.files.single.name,
-        type: 'sound',
-        senderId: id);
+        type: 'sound');
     emit(ChatSuccess(mess: message));
   }
 
@@ -80,40 +72,28 @@ class ChatCubit extends Cubit<ChatState> {
     if (result == null) return;
     File file = File(result.files.single.path!);
     final fileBytes = await file.readAsBytes();
-    String id = await ShardpModel().getSenderId();
     final message = await MessageService().sendFiles(
         roomId: roomId,
         bytesFile: fileBytes,
         name: result.files.single.name,
-        type: 'file',
-        senderId: id);
+        type: 'file');
     emit(ChatSuccess(mess: message));
   }
 
   void sendRecord({required String path, required String roomId}) async {
     File result = File(path);
     final recordBytes = await result.readAsBytes();
-    String id = await ShardpModel().getSenderId();
     final message = await MessageService().sendFiles(
-        roomId: roomId,
-        bytesFile: recordBytes,
-        name: path,
-        type: 'record',
-        senderId: id);
+        roomId: roomId, bytesFile: recordBytes, name: path, type: 'record');
     emit(ChatSuccess(mess: message));
   }
 
-  void receiveMess() async {
-    String id = await ShardpModel().getSenderId();
-    server.socket.on('message', (data) {
-      if (id != data['senderId']) {
-        emit(ChatSuccess(mess: MessageModel.fromJson(data)));
-      }
-    });
-    // final message = MessageService().receiveMessages(senderId: id);
-    // if (message != null) {
-    //   emit(ChatSuccess(mess: message));
-    // }
+  void receiveMess() {
+    MessageService().receiveMessages(
+      onMessageReceived: (message) {
+        emit(ChatSuccess(mess: message));
+      },
+    );
   }
 
   void sendReact({required String react, required String messId}) {
@@ -122,14 +102,9 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void receiveReact() {
-    String? messId;
-    String? react;
-    server.socket.on(
-      'receiveReact',
-      (data) {
-        messId = data['messageId'];
-        react = data['type'];
-        emit(ReactSuccess(react: react!, messId: messId!));
+    MessageService().receiveReact(
+      onReactReceived: (messageId, react) {
+        emit(ReactSuccess(react: react, messId: messageId));
       },
     );
   }
@@ -142,5 +117,43 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+
+
+  void onTyping() {
+    // String userId;
+    // bool typing;
+    // server.socket.on(
+    //   'isTyping',
+    //   (data) {
+    //     userId = data['userId'];
+    //     typing = data['isTyping'];
+    //     emit(Typing(userId: userId, typing: typing));
+    //   },
+    // );
+    RoomsService().typingCheck(
+      typingFn: (userId, typing) {
+        emit(Typing(userId: userId, typing: typing));
+      },
+    );
+  }
+
+  void onOnline() {
+    // String userId;
+    // bool online;
+    // server.socket.on(
+    //   'isOnline',
+    //   (data) {
+    //     userId = data['userId'];
+    //     online = data['isOnline'];
+    //     emit(Online(userId: userId, online: online));
+    //   },
+    // );
+    RoomsService().onlineCheck(
+      onlineFn: (userId, online) {
+        emit(Online(userId: userId, online: online));
+      },
+    );
   }
 }

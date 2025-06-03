@@ -1,4 +1,4 @@
-import 'package:chat_sdk/SDK/models/room_model.dart';
+import 'package:chat_sdk/models/room_model.dart';
 
 abstract class RoomsState {}
 

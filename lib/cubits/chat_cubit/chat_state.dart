@@ -1,4 +1,4 @@
-import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/models/message_model.dart';
 
 abstract class ChatState {}
 
@@ -15,12 +15,24 @@ final class ReactSuccess extends ChatState {
   ReactSuccess({required this.react, required this.messId});
 }
 
-final class AiMessageSent  extends ChatState {
+final class AiMessageSent extends ChatState {
   final String mess;
   AiMessageSent({required this.mess});
 }
 
-final class AiMessageReceived  extends ChatState {
+final class AiMessageReceived extends ChatState {
   final String mess;
   AiMessageReceived({required this.mess});
+}
+
+final class Typing extends ChatState {
+  final String userId;
+  final bool typing;
+  Typing({required this.userId, required this.typing});
+}
+
+final class Online extends ChatState {
+  final String userId;
+  final bool online;
+  Online({required this.userId, required this.online});
 }

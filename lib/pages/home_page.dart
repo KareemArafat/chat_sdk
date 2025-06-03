@@ -2,7 +2,7 @@ import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/rooms_cubit.dart';
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
-import 'package:chat_sdk/SDK/models/room_model.dart';
+import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_group_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
     server.connectToServer(widget.token, widget.apiKey);
     BlocProvider.of<ChatCubit>(context).receiveMess();
     BlocProvider.of<ChatCubit>(context).receiveReact();
+    BlocProvider.of<ChatCubit>(context).onTyping();
+    BlocProvider.of<ChatCubit>(context).onOnline();
     getRoomsCards();
   }
 

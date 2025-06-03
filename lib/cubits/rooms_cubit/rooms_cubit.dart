@@ -1,6 +1,6 @@
 import 'package:chat_sdk/cubits/rooms_cubit/room_state.dart';
-import 'package:chat_sdk/SDK/models/room_model.dart';
-import 'package:chat_sdk/SDK/services/rooms_service.dart';
+import 'package:chat_sdk/models/room_model.dart';
+import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoomsCubit extends Cubit<RoomsState> {

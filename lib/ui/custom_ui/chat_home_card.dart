@@ -1,13 +1,13 @@
 import 'package:chat_sdk/core/consts.dart';
-import 'package:chat_sdk/SDK/models/room_model.dart';
+import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
 import 'package:chat_sdk/core/shardP/shard_p_model.dart';
+import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatHomeCard extends StatelessWidget {
-  const ChatHomeCard(
-      {super.key, required this.room});
+  const ChatHomeCard({super.key, required this.room});
   final RoomModel room;
 
   @override
@@ -45,10 +45,25 @@ class ChatHomeCard extends StatelessWidget {
       }
     }
 
+    Future<String?> friendId(String myId) async {
+      if (room.users!.length == 2) {
+        for (var id in room.users!) {
+          if (id != myId) {
+            return id;
+          }
+        }
+      }
+      return null;
+    }
+
     return GestureDetector(
       onTap: () async {
         String id = await ShardpModel().getSenderId();
         String name = await nameFn();
+        String? friend = await friendId(id);
+        if (friend != null) {
+          RoomsService().online(friend);
+        }
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ChatPage(
             id: id,

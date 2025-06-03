@@ -1,21 +1,21 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:typed_data';
 import 'package:chat_sdk/core/consts.dart';
-import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/core/shardP/shard_p_model.dart';
+import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/core/api/api.dart';
 import 'package:intl/intl.dart';
 
 class MessageService {
-  Future<MessageModel> sendMessage(
-      {required String mess,
-      required String roomId,
-      required String senderId}) async {
-    MessageModel message =
-        MessageModel(senderId: senderId, roomId: roomId, text: mess);
+  Future<MessageModel> sendMessage({
+    required String mess,
+    required String roomId,
+  }) async {
+    MessageModel message = MessageModel(roomId: roomId, text: mess);
     final completer = Completer<void>();
     server.socket.emitWithAck('sendMessage', message.toJson(), ack: (data) {
       message.messageId = data['messageId'];
+      message.senderId = data['senderId'];
       completer.complete();
     });
     await completer.future;
@@ -26,10 +26,8 @@ class MessageService {
       {required String roomId,
       required Uint8List bytesFile,
       required String name,
-      required String type,
-      required String senderId}) async {
+      required String type}) async {
     final message = MessageModel(
-        senderId: senderId,
         roomId: roomId,
         fileTime: DateFormat('hh:mm a').format(DateTime.now()),
         file: MediaFile(
@@ -40,6 +38,7 @@ class MessageService {
     final completer = Completer<void>();
     server.socket.emitWithAck('uploadFiles', message.toJson(), ack: (data) {
       message.messageId = data['messageId'];
+      message.senderId = data['senderId'];
       completer.complete();
     });
     await completer.future;
@@ -48,36 +47,34 @@ class MessageService {
 
   Future<Uint8List?> downloadFiles(
       {required String path, required String token}) async {
-    try {
-      final response = await Api()
-          .getFile(url: "$baseUrl/download?path=$path&&token=$token");
-      return response;
-    } catch (e) {
-      log(e.toString());
-      return null;
-    }
+    final response =
+        await Api().getFile(url: "$baseUrl/download?path=$path&&token=$token");
+    return response;
   }
 
-  MessageModel? receiveMessages({required String senderId}) {
-    MessageModel? message;
+  void receiveMessages(
+      {required void Function(MessageModel message) onMessageReceived}) async {
+    String senderId = await ShardpModel().getSenderId();
     server.socket.on('message', (data) {
       if (senderId != data['senderId']) {
-        message = MessageModel.fromJson(data);
+        onMessageReceived(MessageModel.fromJson(data));
       }
     });
-    return message;
   }
 
   void sendReact({required String messageId, required String react}) {
     server.socket.emit('sendReact', {'messageId': messageId, 'react': react});
   }
 
-  String? receiveReact() {
-    String? react;
-    server.socket.on('receiveReact', (data) {
-      react = data;
-    });
-    return react;
+  void receiveReact(
+      {required void Function(String messageId, String react)
+          onReactReceived}) {
+    server.socket.on(
+      'receiveReact',
+      (data) {
+        onReactReceived(data['messageId'], data['type']);
+      },
+    );
   }
 
   Future<String> aiMessage({
@@ -91,4 +88,6 @@ class MessageService {
     );
     return responseData;
   }
+
+  
 }

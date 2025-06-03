@@ -1,8 +1,9 @@
 import 'package:chat_sdk/core/consts.dart';
+import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/ui/custom_ui/attachment_bottom_sheet.dart';
 import 'package:chat_sdk/ui/custom_ui/recording_process.dart';
-import 'package:chat_sdk/ui/bubbles_ui/recoding.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatBottomField extends StatelessWidget {
   const ChatBottomField(
@@ -18,7 +19,6 @@ class ChatBottomField extends StatelessWidget {
       this.videoFn,
       this.fileFn,
       this.videoRecordFn,
-      this.recordObj,
       this.roomId,
       this.aiChat = false});
   final Function(String)? changed;
@@ -32,7 +32,6 @@ class ChatBottomField extends StatelessWidget {
   final void Function()? videoFn;
   final void Function()? fileFn;
   final void Function()? videoRecordFn;
-  final RecordService? recordObj;
   final String? roomId;
   final bool aiChat;
 
@@ -114,8 +113,10 @@ class ChatBottomField extends StatelessWidget {
                   ),
                 )
               : VoiceRecorderScreen(
-                  recordObj: recordObj!,
-                  roomId: roomId!,
+                  onRecord: (recordObj) {
+                    BlocProvider.of<ChatCubit>(context).sendRecord(
+                        path: recordObj.audioPath!, roomId: roomId!);
+                  },
                 ),
         ],
       ),

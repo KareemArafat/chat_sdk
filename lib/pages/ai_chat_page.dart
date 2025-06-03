@@ -1,5 +1,5 @@
 import 'package:chat_sdk/core/consts.dart';
-import 'package:chat_sdk/SDK/models/message_model.dart';
+import 'package:chat_sdk/models/message_model.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
 import 'package:chat_sdk/ui/bubbles_ui/text_bubble.dart';

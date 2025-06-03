@@ -8,7 +8,7 @@ class SocketService {
 
   late IO.Socket socket;
 
-  void connectToServer(String token, String apiKey) async {
+  void connectToServer(String token, String apiKey) {
     socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -19,7 +19,7 @@ class SocketService {
     socket.off('disconnect');
     socket.onConnect((data) => log('server is connected ^_^'));
     socket.onDisconnect((data) => log('server is disconnected >_<'));
-    socket.onError((error) => log('Socket error client side: $error'));
+    socket.onError((error) => log('Socket client side error: $error'));
   }
 
   void closeServerConnection() {
