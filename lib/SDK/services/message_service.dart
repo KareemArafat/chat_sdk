@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/SDK/models/message_model.dart';
-import 'package:chat_sdk/SDK/core/api/api.dart';
+import 'package:chat_sdk/core/api/api.dart';
 import 'package:intl/intl.dart';
 
 class MessageService {
@@ -34,7 +34,7 @@ class MessageService {
         fileTime: DateFormat('hh:mm a').format(DateTime.now()),
         file: MediaFile(
           dataSend: bytesFile,
-          type: type, // 'image'  'video'  'sound'  'record'  'file',
+          type: type, //    'image'  'video'  'sound'  'record'  'file',
           name: name,
         ));
     final completer = Completer<void>();
@@ -49,9 +49,9 @@ class MessageService {
   Future<Uint8List?> downloadFiles(
       {required String path, required String token}) async {
     try {
-      final dataList = await Api()
+      final response = await Api()
           .getFile(url: "$baseUrl/download?path=$path&&token=$token");
-      return dataList;
+      return response;
     } catch (e) {
       log(e.toString());
       return null;

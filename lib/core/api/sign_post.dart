@@ -1,5 +1,5 @@
 import 'package:chat_sdk/core/consts.dart';
-import 'package:chat_sdk/SDK/core/api/api.dart';
+import 'package:chat_sdk/core/api/api.dart';
 import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 
 class Sign {

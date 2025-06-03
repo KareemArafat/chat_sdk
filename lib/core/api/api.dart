@@ -11,22 +11,18 @@ class Api {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-
     if (header != null) {
       headers.addAll({'x-api-key': header});
       //  Z0bryi$Z0br6969
     }
-
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
-
     http.Response response = await http.post(
       Uri.parse(url),
       body: jsonEncode(body),
       headers: headers,
     );
-
     if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> data = jsonDecode(response.body);
       return data;
@@ -38,13 +34,10 @@ class Api {
 
   Future<dynamic> get({required String url, String? token}) async {
     Map<String, String> headers = {};
-
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
-
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
     } else {
@@ -55,13 +48,10 @@ class Api {
 
   Future<dynamic> getFile({required String url, String? token}) async {
     Map<String, String> headers = {};
-
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
-
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return response.bodyBytes;
     } else {

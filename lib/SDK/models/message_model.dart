@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 
 class MessageModel {
   String? senderId;
@@ -57,9 +55,6 @@ class MediaFile {
   String? path;
   String? name;
   String? type;
-  File? videoData;
-  FilePickerResult? soundData;
-  String? recordData;
 
   MediaFile({
     this.dataSend,
