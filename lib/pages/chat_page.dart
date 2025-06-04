@@ -1,7 +1,6 @@
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_state.dart';
-import 'package:chat_sdk/pages/voice_call_page.dart';
 import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:chat_sdk/ui/bubbles_ui/file_bubble.dart';
 import 'package:chat_sdk/ui/bubbles_ui/sound_bubble.dart';
@@ -95,7 +94,7 @@ class ChatPage extends StatelessWidget {
                                               0.035,
                                           fontWeight: FontWeight.w500))
                                   : isRecording
-                                      ? Text('Recoding ..',
+                                      ? Text('Recoding audio ..',
                                           style: TextStyle(
                                               color: const Color.fromARGB(
                                                   255, 11, 255, 52),
@@ -112,22 +111,6 @@ class ChatPage extends StatelessWidget {
                 ],
               ),
               actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VoiceCallPage(name: name)));
-                    },
-                    icon: const Icon(Icons.call, color: Colors.white)),
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VoiceCallPage(name: name)));
-                    },
-                    icon: const Icon(Icons.videocam, color: Colors.white)),
                 IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.more_vert, color: Colors.white)),

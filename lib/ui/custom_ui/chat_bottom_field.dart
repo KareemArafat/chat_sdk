@@ -12,8 +12,6 @@ class ChatBottomField extends StatelessWidget {
       this.changed,
       this.submitted,
       this.controller,
-      this.voiceFn,
-      this.emojiFn,
       this.soundFn,
       this.cameraFn,
       this.imageFn,
@@ -25,9 +23,7 @@ class ChatBottomField extends StatelessWidget {
   final Function(String)? changed;
   final Function(String)? submitted;
   final TextEditingController? controller;
-  final void Function()? emojiFn;
   final void Function()? soundFn;
-  final void Function()? voiceFn;
   final void Function()? cameraFn;
   final void Function()? imageFn;
   final void Function()? videoFn;
@@ -73,7 +69,7 @@ class ChatBottomField extends StatelessWidget {
                 Positioned(
                   left: 6,
                   child: IconButton(
-                    onPressed: emojiFn,
+                    onPressed: () {},
                     icon: const Icon(Icons.emoji_emotions, color: baseColor1),
                   ),
                 ),

@@ -27,7 +27,7 @@ class VideoBubble extends StatelessWidget {
       child: Align(
         alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -60,21 +60,24 @@ class VideoBubble extends StatelessWidget {
                 listener: (context, state) {
                   if (state is ReactSuccess) {
                     if (o.messageId == state.messId) {
-                      o.reacts = [state.react];
+                      o.reacts ??= [];
+                      if (!o.reacts!.contains(state.react)) {
+                        o.reacts!.add(state.react);
+                      }
                     }
                   }
                 },
                 builder: (context, state) {
                   if (o.reacts != null) {
                     return Positioned(
-                      bottom: -20,
-                      left: isMe ? null : -15,
-                      right: isMe ? -15 : null,
+                      bottom: -22,
+                      left: isMe ? 10 : null,
+                      right: isMe ? null : 10,
                       child: Container(
-                        padding: const EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
                           color: Colors.grey[900],
-                          shape: BoxShape.circle,
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
@@ -83,9 +86,18 @@ class VideoBubble extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Text(
-                          o.reacts![0],
-                          style: const TextStyle(fontSize: 18),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: o.reacts!
+                              .map((react) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    child: Text(
+                                      react,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
                     );
@@ -104,6 +116,7 @@ class VideoBubble extends StatelessWidget {
 class VideoView extends StatefulWidget {
   const VideoView({super.key, required this.o});
   final MessageModel o;
+
   @override
   State<VideoView> createState() => _VideoViewState();
 }
@@ -117,11 +130,19 @@ class _VideoViewState extends State<VideoView> {
   @override
   void initState() {
     super.initState();
-    _initializeVideo();
+    _initializeVideo(pathCheck());
   }
 
-  Future<void> _initializeVideo() async {
-    if (widget.o.file!.path == null) {
+  bool pathCheck() {
+    if (widget.o.file!.path != null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<void> _initializeVideo(bool x) async {
+    if (x) {
       isLocal = true;
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/${widget.o.file!.name}');
@@ -217,8 +238,7 @@ class _VideoViewState extends State<VideoView> {
                               widget.o.file!.dataSend = await MessageService()
                                   .downloadFiles(
                                       path: widget.o.file!.path!, token: token);
-                              widget.o.file!.path = null;
-                              await _initializeVideo();
+                              await _initializeVideo(true);
                             } catch (e) {
                               log('Video download error: $e');
                             }

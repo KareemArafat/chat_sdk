@@ -64,6 +64,7 @@ class AudioPlayerState extends State<SoundBubble> {
 
   @override
   Widget build(BuildContext context) {
+    bool initial = widget.o.file!.dataSend != null ? true : false;
     return GestureDetector(
       onLongPressStart: (details) {
         showReactionBox(
@@ -72,7 +73,7 @@ class AudioPlayerState extends State<SoundBubble> {
       child: Align(
         alignment: widget.isMe ? Alignment.bottomLeft : Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -92,7 +93,7 @@ class AudioPlayerState extends State<SoundBubble> {
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Row(
                             children: <Widget>[
-                              widget.o.file!.path == null
+                              initial
                                   ? playIcon()
                                   : GestureDetector(
                                       onTap: () async {
@@ -105,7 +106,6 @@ class AudioPlayerState extends State<SoundBubble> {
                                                       path:
                                                           widget.o.file!.path!,
                                                       token: token);
-                                          widget.o.file!.path = null;
                                           setState(() {});
                                         } catch (e) {
                                           log('error .. ${e.toString()}');
@@ -136,21 +136,24 @@ class AudioPlayerState extends State<SoundBubble> {
                 listener: (context, state) {
                   if (state is ReactSuccess) {
                     if (widget.o.messageId == state.messId) {
-                      widget.o.reacts = [state.react];
+                      widget.o.reacts ??= [];
+                      if (!widget.o.reacts!.contains(state.react)) {
+                        widget.o.reacts!.add(state.react);
+                      }
                     }
                   }
                 },
                 builder: (context, state) {
                   if (widget.o.reacts != null) {
                     return Positioned(
-                      bottom: -12,
-                      left: widget.isMe ? null : -10,
-                      right: widget.isMe ? -10 : null,
+                      bottom: -23,
+                      left: widget.isMe ? 12 : null,
+                      right: widget.isMe ? null : 12,
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
                           color: Colors.grey[900],
-                          shape: BoxShape.circle,
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
@@ -159,9 +162,18 @@ class AudioPlayerState extends State<SoundBubble> {
                             ),
                           ],
                         ),
-                        child: Text(
-                          widget.o.reacts![0],
-                          style: const TextStyle(fontSize: 18),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: widget.o.reacts!
+                              .map((react) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    child: Text(
+                                      react,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
                     );

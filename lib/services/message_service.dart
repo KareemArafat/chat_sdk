@@ -56,7 +56,6 @@ class MessageService {
       {required void Function(MessageModel message) onMessageReceived}) async {
     String senderId = await ShardpModel().getSenderId();
     server.socket.on('message', (data) {
-      print(data);
       if (senderId != data['senderId']) {
         onMessageReceived(MessageModel.fromJson(data));
       }

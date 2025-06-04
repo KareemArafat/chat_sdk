@@ -1,4 +1,4 @@
-import 'package:chat_sdk/core/api/sign_post.dart';
+import 'package:chat_sdk/core/api/api.dart';
 
 class AuthService {
   void initialize({

@@ -27,7 +27,7 @@ class FileBubble extends StatelessWidget {
       child: Align(
         alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -57,21 +57,24 @@ class FileBubble extends StatelessWidget {
                 listener: (context, state) {
                   if (state is ReactSuccess) {
                     if (o.messageId == state.messId) {
-                      o.reacts = [state.react];
+                      o.reacts ??= [];
+                      if (!o.reacts!.contains(state.react)) {
+                        o.reacts!.add(state.react);
+                      }
                     }
                   }
                 },
                 builder: (context, state) {
                   if (o.reacts != null) {
                     return Positioned(
-                      bottom: -20,
-                      left: isMe ? null : -15,
-                      right: isMe ? -15 : null,
+                      bottom: -24,
+                      left: isMe ? 10 : null,
+                      right: isMe ? null : 10,
                       child: Container(
-                        padding: const EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
                           color: Colors.grey[900],
-                          shape: BoxShape.circle,
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
@@ -80,9 +83,18 @@ class FileBubble extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Text(
-                          o.reacts![0],
-                          style: const TextStyle(fontSize: 18),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: o.reacts!
+                              .map((react) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    child: Text(
+                                      react,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
                     );
@@ -111,6 +123,7 @@ class _FileViewState extends State<FileView> {
 
   @override
   Widget build(BuildContext context) {
+    bool initial = widget.o.file!.dataSend != null ? true : false;
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Stack(
@@ -122,7 +135,7 @@ class _FileViewState extends State<FileView> {
             width: 140,
             fit: BoxFit.fill,
           ),
-          widget.o.file!.path == null
+          initial
               ? GestureDetector(
                   onTap: () async {
                     final tempDir = await getTemporaryDirectory();
@@ -161,7 +174,6 @@ class _FileViewState extends State<FileView> {
                           widget.o.file!.dataSend = await MessageService()
                               .downloadFiles(
                                   path: widget.o.file!.path!, token: token);
-                          widget.o.file!.path = null;
                           isLoading = false;
                           setState(() {});
                         } catch (e) {

@@ -6,9 +6,7 @@ import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_group_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/ai_card.dart';
 import 'package:chat_sdk/ui/custom_ui/chat_home_card.dart';
-import 'package:chat_sdk/pages/contacts_page.dart';
 import 'package:chat_sdk/pages/sign_page.dart';
-import 'package:chat_sdk/pages/search_page.dart';
 import 'package:chat_sdk/core/shardP/shard_p_model.dart';
 import 'package:chat_sdk/ui/custom_ui/add_chat.dart';
 import 'package:chat_sdk/ui/custom_ui/menu_sheet.dart';
@@ -56,13 +54,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: baseGroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ContactsPage(),
-              ));
-        },
+        onPressed: () {},
         shape: const CircleBorder(),
         backgroundColor: baseColor1,
         child: const Icon(
@@ -98,12 +90,6 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.person_add_alt_1),
             onPressed: () {
               addChat(context);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: SearchPage());
             },
           ),
           IconButton(
