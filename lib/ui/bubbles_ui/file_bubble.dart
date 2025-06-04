@@ -27,59 +27,27 @@ class FileBubble extends StatelessWidget {
       child: Align(
         alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               IntrinsicWidth(
                 child: Container(
-                    height: MediaQuery.of(context).size.height / 5.2,
-                    width: MediaQuery.of(context).size.width / 2.7,
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: isMe ? baseColor1 : baseAppBarColor,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(15),
                         topRight: const Radius.circular(15),
                         bottomRight:
-                            isMe ? const Radius.circular(30) : Radius.zero,
+                            isMe ? const Radius.circular(15) : Radius.zero,
                         bottomLeft:
-                            isMe ? Radius.zero : const Radius.circular(30),
+                            isMe ? Radius.zero : const Radius.circular(15),
                       ),
                     ),
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final tempDir = await getTemporaryDirectory();
-                            final file =
-                                File('${tempDir.path}/${o.file!.name}');
-                            await file
-                                .writeAsBytes(o.file!.dataSend! as List<int>);
-                            await OpenFilex.open(file.path);
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Image.asset(
-                                  'assets/images/file.jpg',
-                                  //   height: MediaQuery.of(context).size.height / 6.19,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 0, bottom: 0),
-                                  child: Text('Open',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        FileView(o: o),
                         const SizedBox(height: 4),
                         const TimeWidget(),
                       ],
@@ -96,11 +64,11 @@ class FileBubble extends StatelessWidget {
                 builder: (context, state) {
                   if (o.reacts != null) {
                     return Positioned(
-                      bottom: -10,
-                      left: isMe ? null : 0,
-                      right: isMe ? 0 : null,
+                      bottom: -20,
+                      left: isMe ? null : -15,
+                      right: isMe ? -15 : null,
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           color: Colors.grey[900],
                           shape: BoxShape.circle,
@@ -146,17 +114,34 @@ class _FileViewState extends State<FileView> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Stack(
+        alignment: Alignment.bottomRight,
         children: [
-          Image.asset('assets/images/file.jpg'),
-          widget.o.file!.path != null
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 6),
-                  child: Text('Open',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      )),
+          Image.asset(
+            'assets/images/file.jpg',
+            height: 150,
+            width: 140,
+            fit: BoxFit.fill,
+          ),
+          widget.o.file!.path == null
+              ? GestureDetector(
+                  onTap: () async {
+                    final tempDir = await getTemporaryDirectory();
+                    final file = File('${tempDir.path}/${widget.o.file!.name}');
+                    await file
+                        .writeAsBytes(widget.o.file!.dataSend! as List<int>);
+                    await OpenFilex.open(file.path);
+                  },
+                  child: const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text('Open',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
                 )
               : isLoading
                   ? const Padding(
@@ -164,6 +149,7 @@ class _FileViewState extends State<FileView> {
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
                         strokeAlign: -5,
+                        color: Colors.deepPurpleAccent,
                       ),
                     )
                   : IconButton(

@@ -33,6 +33,7 @@ class ChatPage extends StatelessWidget {
     bool isWriting = false;
     bool isOnline = false;
     bool isTyping = false;
+    bool isRecording = false;
     return Stack(
       children: [
         Positioned.fill(
@@ -60,6 +61,9 @@ class ChatPage extends StatelessWidget {
                       }
                       if (state is Online && state.userId != id) {
                         isOnline = state.online;
+                      }
+                      if (state is Recording && state.userId != id) {
+                        isRecording = state.recording;
                       }
                     },
                     builder: (context, state) {
@@ -90,7 +94,17 @@ class ChatPage extends StatelessWidget {
                                                   .width *
                                               0.035,
                                           fontWeight: FontWeight.w500))
-                                  : const SizedBox.shrink(),
+                                  : isRecording
+                                      ? Text('Recoding ..',
+                                          style: TextStyle(
+                                              color: const Color.fromARGB(
+                                                  255, 11, 255, 52),
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.035,
+                                              fontWeight: FontWeight.w500))
+                                      : const SizedBox.shrink(),
                         ],
                       );
                     },
@@ -228,15 +242,15 @@ class ChatPage extends StatelessWidget {
                     submitted: (p0) {
                       BlocProvider.of<ChatCubit>(context)
                           .sendMess(mess: p0, roomId: roomId);
-                      RoomsService().typing(roomId, false);
+                      RoomsService().typingCheck(roomId, false);
                       textController.clear();
                     },
                     changed: (p0) {
                       if (p0.isNotEmpty && !isWriting) {
-                        RoomsService().typing(roomId, true);
+                        RoomsService().typingCheck(roomId, true);
                         isWriting = true;
                       } else if (p0.isEmpty) {
-                        RoomsService().typing(roomId, false);
+                        RoomsService().typingCheck(roomId, false);
                         isWriting = false;
                       }
                     },

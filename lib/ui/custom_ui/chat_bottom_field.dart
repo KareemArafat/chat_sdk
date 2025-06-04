@@ -1,5 +1,6 @@
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chat_sdk/services/rooms_service.dart';
 import 'package:chat_sdk/ui/custom_ui/attachment_bottom_sheet.dart';
 import 'package:chat_sdk/ui/custom_ui/recording_process.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +117,9 @@ class ChatBottomField extends StatelessWidget {
                   onRecord: (recordObj) {
                     BlocProvider.of<ChatCubit>(context).sendRecord(
                         path: recordObj.audioPath!, roomId: roomId!);
+                  },
+                  isRecording: (isRecording) {
+                    RoomsService().recordCheck(roomId!, isRecording);
                   },
                 ),
         ],

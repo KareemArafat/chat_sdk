@@ -16,7 +16,7 @@ class _ShardViewState extends State<ShardView> {
   @override
   void initState() {
     super.initState();
-  
+    BlocProvider.of<AuthCubit>(context).check();
   }
 
   @override

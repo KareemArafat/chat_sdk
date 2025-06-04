@@ -65,11 +65,11 @@ class TextBubble extends StatelessWidget {
               builder: (context, state) {
                 if (o.reacts != null) {
                   return Positioned(
-                    bottom: -10,
+                    bottom: -4,
                     left: isMe ? null : 0,
                     right: isMe ? 0 : null,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         color: Colors.grey[900],
                         shape: BoxShape.circle,

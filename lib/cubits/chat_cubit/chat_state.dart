@@ -36,3 +36,9 @@ final class Online extends ChatState {
   final bool online;
   Online({required this.userId, required this.online});
 }
+
+final class Recording extends ChatState {
+  final String userId;
+  final bool recording;
+  Recording({required this.userId, required this.recording});
+}

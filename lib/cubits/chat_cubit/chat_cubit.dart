@@ -119,20 +119,8 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-
-
   void onTyping() {
-    // String userId;
-    // bool typing;
-    // server.socket.on(
-    //   'isTyping',
-    //   (data) {
-    //     userId = data['userId'];
-    //     typing = data['isTyping'];
-    //     emit(Typing(userId: userId, typing: typing));
-    //   },
-    // );
-    RoomsService().typingCheck(
+    RoomsService().typingResult(
       typingFn: (userId, typing) {
         emit(Typing(userId: userId, typing: typing));
       },
@@ -140,19 +128,17 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void onOnline() {
-    // String userId;
-    // bool online;
-    // server.socket.on(
-    //   'isOnline',
-    //   (data) {
-    //     userId = data['userId'];
-    //     online = data['isOnline'];
-    //     emit(Online(userId: userId, online: online));
-    //   },
-    // );
-    RoomsService().onlineCheck(
+    RoomsService().onlineResult(
       onlineFn: (userId, online) {
         emit(Online(userId: userId, online: online));
+      },
+    );
+  }
+
+  void onRecord() {
+    RoomsService().recordingResult(
+      recordFn: (userId, recording) {
+        emit(Recording(userId: userId, recording: recording));
       },
     );
   }

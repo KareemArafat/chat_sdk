@@ -45,7 +45,7 @@ class RoomsService {
     }
   }
 
-  void typingCheck(
+  void typingResult(
       {required void Function(String userId, bool typing) typingFn}) {
     server.socket.on(
       'isTyping',
@@ -55,11 +55,11 @@ class RoomsService {
     );
   }
 
-  void typing(String roomId, bool isTyping) {
+  void typingCheck(String roomId, bool isTyping) {
     server.socket.emit('isTyping', {'roomId': roomId, 'isTyping': isTyping});
   }
 
-  void onlineCheck(
+  void onlineResult(
       {required void Function(String userId, bool online) onlineFn}) {
     server.socket.on(
       'isOnline',
@@ -69,7 +69,33 @@ class RoomsService {
     );
   }
 
-  void online(String userId) {
-    server.socket.emit('isOnline', {'userId': userId});
+  void onlineCheck(RoomModel room) async {
+    String receiverId;
+    String senderId = await ShardpModel().getSenderId();
+    if (room.usersIds!.length == 2) {
+      for (var id in room.ids!) {
+        if (id != senderId) {
+          receiverId = id;
+          Timer.periodic(const Duration(seconds: 50000), (timer) async {
+            server.socket.emit('isOnline', {'userId': receiverId});
+          });
+        }
+      }
+    }
+  }
+
+  void recordingResult(
+      {required void Function(String userId, bool recording) recordFn}) {
+    server.socket.on(
+      'isRecording',
+      (data) {
+        recordFn(data['userId'], data['isRecording']);
+      },
+    );
+  }
+
+  void recordCheck(String roomId, bool isRecording) {
+    server.socket
+        .emit('isRecording', {'roomId': roomId, 'isRecording': isRecording});
   }
 }

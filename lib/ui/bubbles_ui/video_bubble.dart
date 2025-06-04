@@ -27,22 +27,22 @@ class VideoBubble extends StatelessWidget {
       child: Align(
         alignment: isMe ? Alignment.bottomLeft : Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               IntrinsicWidth(
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.5,
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(15),
                       topRight: const Radius.circular(15),
                       bottomRight:
-                          isMe ? const Radius.circular(30) : Radius.zero,
+                          isMe ? const Radius.circular(15) : Radius.zero,
                       bottomLeft:
-                          isMe ? Radius.zero : const Radius.circular(30),
+                          isMe ? Radius.zero : const Radius.circular(15),
                     ),
                     color: isMe ? baseColor1 : baseAppBarColor,
                   ),
@@ -67,11 +67,11 @@ class VideoBubble extends StatelessWidget {
                 builder: (context, state) {
                   if (o.reacts != null) {
                     return Positioned(
-                      bottom: -10,
-                      left: isMe ? null : 0,
-                      right: isMe ? 0 : null,
+                      bottom: -20,
+                      left: isMe ? null : -15,
+                      right: isMe ? -15 : null,
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           color: Colors.grey[900],
                           shape: BoxShape.circle,

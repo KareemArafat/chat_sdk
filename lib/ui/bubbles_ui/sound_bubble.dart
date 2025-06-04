@@ -143,9 +143,9 @@ class AudioPlayerState extends State<SoundBubble> {
                 builder: (context, state) {
                   if (widget.o.reacts != null) {
                     return Positioned(
-                      bottom: -20,
-                      left: widget.isMe ? null : 0,
-                      right: widget.isMe ? 0 : null,
+                      bottom: -12,
+                      left: widget.isMe ? null : -10,
+                      right: widget.isMe ? -10 : null,
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(

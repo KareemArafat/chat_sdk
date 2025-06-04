@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chat_sdk/core/consts.dart';
 import 'package:chat_sdk/models/room_model.dart';
 import 'package:chat_sdk/pages/chat_page.dart';
@@ -38,32 +40,20 @@ class ChatHomeCard extends StatelessWidget {
 
     Future<String> nameFn() async {
       String email = await ShardpModel().getUserId();
-      if (room.users!.first == email) {
-        return room.users!.last;
+      if (room.usersIds!.first == email) {
+        return room.usersIds!.last;
       } else {
-        return room.users!.first;
+        return room.usersIds!.first;
       }
-    }
-
-    Future<String?> friendId(String myId) async {
-      if (room.users!.length == 2) {
-        for (var id in room.users!) {
-          if (id != myId) {
-            return id;
-          }
-        }
-      }
-      return null;
     }
 
     return GestureDetector(
       onTap: () async {
         String id = await ShardpModel().getSenderId();
         String name = await nameFn();
-        String? friend = await friendId(id);
-        if (friend != null) {
-          RoomsService().online(friend);
-        }
+
+        RoomsService().onlineCheck(room);
+
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ChatPage(
             id: id,
@@ -78,11 +68,11 @@ class ChatHomeCard extends StatelessWidget {
             minTileHeight: MediaQuery.of(context).size.height / 13,
             leading: CircleAvatar(
               radius: 30,
-              backgroundImage: room.users!.length > 2
+              backgroundImage: room.usersIds!.length > 2
                   ? const AssetImage('assets/images/group.png')
                   : const AssetImage('assets/images/user_image.jpg'),
             ),
-            title: room.users!.length > 2
+            title: room.usersIds!.length > 2
                 ? Text(
                     room.name!,
                     style: const TextStyle(

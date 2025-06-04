@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     BlocProvider.of<ChatCubit>(context).receiveReact();
     BlocProvider.of<ChatCubit>(context).onTyping();
     BlocProvider.of<ChatCubit>(context).onOnline();
+    BlocProvider.of<ChatCubit>(context).onRecord();
     getRoomsCards();
   }
 

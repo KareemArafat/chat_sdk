@@ -7,9 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VoiceRecorderScreen extends StatefulWidget {
-  const VoiceRecorderScreen({super.key, required this.onRecord});
+  const VoiceRecorderScreen(
+      {super.key, required this.onRecord, required this.isRecording});
 
   final void Function(RecordService recordObj) onRecord;
+  final void Function(bool isRecording) isRecording;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -19,6 +21,7 @@ class VoiceRecorderScreen extends StatefulWidget {
 class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> {
   Duration _recordingDuration = Duration.zero;
   RecordService recordObj = RecordService();
+  bool isRecord = false;
 
   @override
   void initState() {
@@ -40,11 +43,13 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> {
 
   void _startRecording() async {
     await recordObj.startRecording();
+    widget.isRecording(isRecord = true);
     setState(() {});
   }
 
   Future<void> _stopRecording() async {
     await recordObj.stopRecording();
+    widget.isRecording(isRecord = false);
     setState(() {});
   }
 

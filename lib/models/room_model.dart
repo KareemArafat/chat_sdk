@@ -3,21 +3,24 @@ class RoomModel {
   final String? name;
   final String? type;
   final LastMassage? lastMessage;
-  final List<String>? users;
+  final List<String>? usersIds;
+  final List<String>? ids;
 
   RoomModel(
       {required this.roomId,
       this.name,
       this.type,
       this.lastMessage,
-      this.users});
+      this.usersIds,
+      this.ids});
 
   factory RoomModel.fromJson(jsonData) {
     return RoomModel(
       roomId: jsonData['id'],
       name: jsonData['name'],
       type: jsonData['type'],
-      users: List<String>.from(jsonData['members']),
+      usersIds: List<String>.from(jsonData['memberUserIds']),
+      ids: List<String>.from(jsonData['memberIds']),
       lastMessage: jsonData['lastMessage'] != null
           ? LastMassage.fromJson(jsonData['lastMessage'])
           : null,
